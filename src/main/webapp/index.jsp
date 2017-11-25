@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title></title>
-  <link rel="stylesheet" href="/layui/css/layui.css"> 
+  <link rel="stylesheet" href="layui/css/layui.css"> 
   <style type="text/css">
   	.index-button{margin-bottom: 30px;}
 	.index-button div{margin: 20px 30px 10px;}
@@ -18,9 +18,9 @@
     <fieldset class="layui-elem-field index-button" style="margin-top: 30px;">
 	  <legend>选择</legend>
 	  <div>
-	    <a class="layui-btn layui-btn-primary"  href="/chat"><i class="layui-icon">&#xe612;</i>单聊</a>
-	    <a class="layui-btn layui-btn-primary" href="/groupchat"><i class="layui-icon">&#xe613;</i>群聊</a> 
-	    <a class="layui-btn layui-btn-primary" href="/bot"><i class="layui-icon">&#xe63a;</i>机器人</a>
+	    <a class="layui-btn layui-btn-primary"  href="chat"><i class="layui-icon">&#xe612;</i>单聊</a>
+	    <a class="layui-btn layui-btn-primary" href="groupchat"><i class="layui-icon">&#xe613;</i>群聊</a> 
+	    <a class="layui-btn layui-btn-primary" href="bot"><i class="layui-icon">&#xe63a;</i>机器人</a>
 	     <div class="layui-text" style="margin: 0; color: #FF5722;">
 		      注意：自行测试请打开两个不同的浏览器
 		 </div>
@@ -34,9 +34,9 @@
 	   <fieldset class="layui-elem-field index-button" style="margin-top: 30px;">
 	  <legend>管理</legend>
 	  <div>
-	    <a class="layui-btn layui-btn-primary"  href="/user/imuser/list" target="_blank"><i class="layui-icon">&#xe613;</i>在线用户管理</a>
-	    <a class="layui-btn layui-btn-primary" href="/usermessage/page" target="_blank"><i class="layui-icon">&#xe63a;</i>消息管理</a> 
-	    <a class="layui-btn layui-btn-primary" href="/sys/generator/page" target="_blank"><i class="layui-icon">&#xe635;</i>代码生成</a> 
+	    <a class="layui-btn layui-btn-primary"  href="user/imuser/list" target="_blank"><i class="layui-icon">&#xe613;</i>在线用户管理</a>
+	    <a class="layui-btn layui-btn-primary" href="usermessage/page" target="_blank"><i class="layui-icon">&#xe63a;</i>消息管理</a> 
+	    <a class="layui-btn layui-btn-primary" href="sys/generator/page" target="_blank"><i class="layui-icon">&#xe635;</i>代码生成</a> 
 	  </div>
 	</fieldset>
   </div>

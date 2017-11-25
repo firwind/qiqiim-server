@@ -62,7 +62,7 @@
 			    layer.close(index); 
 				$.ajax({
 					type : "post",
-					url : "/user/imuser/msgbroadcast",
+					url : "<%=basePath%>user/imuser/msgbroadcast",
 					data : {msgContent:text},
 					dataType : "json",
 					async : false,
@@ -81,7 +81,7 @@
 			  layer.close(index);
 			   $.ajax({
 					type : "post",
-					url : "/user/imuser/msgbroadcast",
+					url : "<%=basePath%>user/imuser/msgbroadcast",
 					data : {msgContent:text,session:usersession},
 					dataType : "json",
 					async : false,
@@ -98,7 +98,7 @@
 			  layer.close(index);
 			   $.ajax({
 					type : "post",
-					url : "/user/imuser/offline",
+					url : "<%=basePath%>user/imuser/offline",
 					data : {msgContent:text,session:usersession},
 					dataType : "json",
 					async : false,
