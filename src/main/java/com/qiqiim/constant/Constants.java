@@ -113,6 +113,14 @@ public class Constants {
     		return super.toString().toLowerCase();
     	}
     }
+    
+    //聊天类型
+    public enum ChatTypeEnum{
+    	SINGLE,TRIPARTITE,CONFERENCE;
+    	public String toString(){
+    		return super.toString();
+    	}
+    }
   
 }
 
