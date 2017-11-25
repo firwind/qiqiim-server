@@ -105,6 +105,14 @@ public class Constants {
 			return super.toString().toLowerCase() ;
 		}
     }
+    
+    //消息状态
+    public enum MessageStatusEnum{
+    	UNREAD,READED;
+    	public String toString(){
+    		return super.toString().toLowerCase();
+    	}
+    }
   
 }
 
