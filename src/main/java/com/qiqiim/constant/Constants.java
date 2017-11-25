@@ -64,5 +64,91 @@ public class Constants {
 	   	 byte OFFLINE = 4; //下线 
 	   	 byte MESSAGE = 5; //消息
 	}
+    
+    //聊天状态
+    public enum ChatStatusEnum{
+		WAITING(0),//等待
+		CHATTING(1),//聊天中
+		END(2);//结束
+		private Integer status;
+		ChatStatusEnum(Integer status){
+			this.status=status;
+		}
+		public void setStatus(Integer status){
+			this.status=status;
+		}
+		public Integer getStatus(){
+			return this.status;
+		}
+		
+		public String toString(){
+			return super.toString().toLowerCase();
+		}
+	}
   
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
