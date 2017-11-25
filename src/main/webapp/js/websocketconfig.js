@@ -1,0 +1,1 @@
+var websocketurl="ws://127.0.0.1:2048/ws";   //ws://{ip}:{端口}/{java后端websocket配置的上下文}

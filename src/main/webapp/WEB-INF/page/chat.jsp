@@ -236,6 +236,7 @@
 </div>
  
 <script src="/layui/layui.js"></script>
+<script src="/js/websocketconfig.js"></script>
 <script>
 	//一般直接写在一个js文件中
 	layui.use(['layer', 'jquery'], function(){
@@ -275,7 +276,7 @@
 	      window.WebSocket = window.MozWebSocket; 
 	  }  
 	  if (window.WebSocket) {
-          socket = new WebSocket("ws://192.168.1.120:2048/ws");
+          socket = new WebSocket(websocketurl);
           socket.binaryType = "arraybuffer"; 
           //收到消息后
           socket.onmessage = function(event) {
