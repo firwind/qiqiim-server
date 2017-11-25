@@ -85,6 +85,26 @@ public class Constants {
 			return super.toString().toLowerCase();
 		}
 	}
+    
+    //渠道
+    public enum ChannelTypeEnum{
+    	WEBIM,
+    	WEXIN,
+    	WEIBO,
+    	VIDEO,
+    	EMAIL;
+    	public String toString(){
+    		return super.toString().toLowerCase();
+    	}
+    }
+    
+    //消息类型
+    public enum MessageTypeEnum{
+    	TEXT,IMAGE,VOICE,FILE;
+		public String toString(){
+			return super.toString().toLowerCase() ;
+		}
+    }
   
 }
 
