@@ -130,6 +130,15 @@ public class Constants {
     		return super.toString().toLowerCase();
     	}
     }
+    
+    //在线访客状态
+    public enum AgentUserStatusEnum{
+    	SERVICE,QUEUE,END;
+    	
+    	public String toString(){
+    		return super.toString().toLowerCase();
+    	}
+    }
   
 }
 
