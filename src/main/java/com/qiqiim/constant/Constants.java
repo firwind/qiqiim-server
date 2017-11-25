@@ -121,6 +121,15 @@ public class Constants {
     		return super.toString();
     	}
     }
+    
+    //坐席状态
+    public enum AgentStatusEnum{
+    	ONLINE,OFFLINE,BUSY,END;
+    	
+    	public String toString(){
+    		return super.toString().toLowerCase();
+    	}
+    }
   
 }
 
