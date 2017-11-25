@@ -14,7 +14,7 @@
     <div class="layui-btn-group listTable">
 	  <button class="layui-btn" data-type="getCheckData">获取多选内容</button> 
 	</div>
-	<table class="layui-table" lay-data="{ url:'/usermessage/list', method:'post',  page:true, id:'listTable'}" lay-filter="list">
+	<table class="layui-table" lay-data="{ url:'<%=basePath%>usermessage/list', method:'post',  page:true, id:'listTable'}" lay-filter="list">
 	  <thead>
 	    <tr>
 	      <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
@@ -39,7 +39,7 @@
 	</script> 
 </div>	
 	 
- <script src="/js/generator/usermessage.js?<%=System.currentTimeMillis()%>"></script>  
+ <script src="<%=basePath%>js/generator/usermessage.js?<%=System.currentTimeMillis()%>"></script>  
 </body>
 </html>
 

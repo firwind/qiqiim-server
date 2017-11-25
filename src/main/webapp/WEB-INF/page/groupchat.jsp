@@ -6,11 +6,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>群聊</title>
-  <link type="text/css" rel="stylesheet" href="/css/im.css"/> 
-  <link rel="stylesheet" href="/layui/css/layui.css">
-    <script type="text/javascript" src="/js/util.js"></script>  
-  <script type="text/javascript" src="/js/message.js?v=1"></script>  
-  <script type="text/javascript" src="/js/messagebody.js"></script>   
+  <link type="text/css" rel="stylesheet" href="css/im.css"/> 
+  <link rel="stylesheet" href="layui/css/layui.css">
+    <script type="text/javascript" src="js/util.js"></script>  
+  <script type="text/javascript" src="js/message.js?v=1"></script>  
+  <script type="text/javascript" src="js/messagebody.js"></script>   
   <style>
 	.flow-default{width: auto; height: 460px; overflow: auto; font-size: 0;}
 	.flow-default li{display: inline-block; margin: 0 5px; font-size: 14px; width: 96%;  margin-bottom: 10px; height: 60px; line-height: 25px; text-align: left; background-color: #eee;}
@@ -169,7 +169,7 @@
 <div style="display:none"  class="mymsg">
 		<div class="customer_lists clearfix  "  >
 			<div class="header_img jimi3"
-				style="background: url(/img/defaultImgLarge.png) no-repeat center;">
+				style="background: url(img/defaultImgLarge.png) no-repeat center;">
 				<div class="header_img_hover"></div>
 			</div>
 			<table class="msg" cellspacing="0" cellpadding="0">
@@ -226,8 +226,8 @@
 	</div>
 </div>
  
-<script src="/layui/layui.js"></script>
-<script src="/js/websocketconfig.js"></script>
+<script src="layui/layui.js"></script>
+<script src="js/websocketconfig.js"></script>
 <script>
 	//一般直接写在一个js文件中
 	layui.use(['layer',  'jquery'], function(){

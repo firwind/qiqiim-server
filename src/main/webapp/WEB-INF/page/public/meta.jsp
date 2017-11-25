@@ -8,7 +8,7 @@
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
 				+ request.getServerName() + ":" + request.getServerPort()
-			+  "/";
+			+ path+"/";
 %>
 
 <link rel="stylesheet" href="<%=basePath%>layui/css/layui.css" media="all" />

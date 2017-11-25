@@ -13,7 +13,7 @@
     <div class="layui-btn-group listTable">
 	  <button class="layui-btn" data-type="getCheckData">多选生成代码</button> 
 	</div>
-	<table class="layui-table" lay-data="{ url:'/sys/generator/list', method:'post',  page:true, id:'listTable'}" lay-filter="list">
+	<table class="layui-table" lay-data="{ url:'<%=basePath%>sys/generator/list', method:'post',  page:true, id:'listTable'}" lay-filter="list">
 	  <thead>
 	    <tr>
 	      <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
@@ -41,7 +41,7 @@ layui.use('table', function(){
   table.on('tool(list)', function(obj){
     var data = obj.data;
     if(obj.event === 'buildFile'){
-    	window.open("/sys/generator/code?tables="+data.tableName);
+    	window.open("<%=basePath%>sys/generator/code?tables="+data.tableName);
        //layer.msg('ID：'+ data.tableName + ' 的查看操作');
     } /* else if(obj.event === 'del'){
       layer.confirm('真的删除行么', function(index){
@@ -64,7 +64,7 @@ layui.use('table', function(){
 		   for(var i=0;i<data.length;i++){
 			   tables+="tables="+data[i].tableName+"&";
 		   } 
-		   window.open("/sys/generator/code?"+tables);
+		   window.open("<%=basePath%>sys/generator/code?"+tables);
 	   } 
     } 
   };
