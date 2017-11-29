@@ -15,7 +15,7 @@
     <fieldset class="layui-elem-field index-button" style="margin-top: 30px;">
 	  <legend>登录</legend>
 	  <div>
-	    <form class="layui-form loginform" action="/login"  method="post">
+	    <form class="layui-form loginform" action="login"  method="post">
 	    		<div class="layui-form-item">
 				    <label class="layui-form-label">账号</label>
 				    <div class="layui-input-block">
