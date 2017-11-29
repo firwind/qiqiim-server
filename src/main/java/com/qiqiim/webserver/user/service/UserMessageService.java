@@ -27,4 +27,16 @@ public interface UserMessageService {
 	int delete(Long id);
 	
 	int deleteBatch(Long[] ids);
+	/**
+	 * 获取历史记录
+	 * @param map
+	 * @return
+	 */
+	List<UserMessageEntity> getHistoryMessageList(Map<String, Object> map);
+	/**
+	 * 获取历史记录总条数
+	 * @param map
+	 * @return
+	 */
+	int getHistoryMessageCount(Map<String, Object> map);
 }

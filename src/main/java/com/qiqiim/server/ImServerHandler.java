@@ -58,7 +58,9 @@ public class ImServerHandler  extends ChannelInboundHandlerAdapter{
 	    	
 	     	if(lastTime != null && System.currentTimeMillis() - lastTime >= Constants.ImserverConfig.PING_TIME_OUT)
 	     	{
-	     		ctx.channel().close();
+	     		String sessionId = connertor.getChannelSessionId(ctx);
+	     		connertor.close(sessionId);
+	     		//ctx.channel().close();
 	     	}
 	     	ctx.channel().attr(Constants.SessionConfig.SERVER_SESSION_HEARBEAT).set(null);
 	    }
@@ -109,7 +111,8 @@ public class ImServerHandler  extends ChannelInboundHandlerAdapter{
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         super.channelInactive(ctx);
         log.debug("ImServerHandler channelInactive from (" + ImUtils.getRemoteAddress(ctx) + ")");
-        receiveMessages(ctx,new MessageWrapper(MessageWrapper.MessageProtocol.CLOSE, null,null, null));  
+        String sessionId = connertor.getChannelSessionId(ctx);
+        receiveMessages(ctx,new MessageWrapper(MessageWrapper.MessageProtocol.CLOSE, sessionId,null, null));  
     }
 
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {

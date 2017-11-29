@@ -51,5 +51,15 @@ public class UserMessageServiceImpl implements UserMessageService {
 	public int deleteBatch(Long[] ids){
 		return userMessageDao.deleteBatch(ids);
 	}
+
+	@Override
+	public List<UserMessageEntity> getHistoryMessageList(Map<String, Object> map) {
+		return userMessageDao.getHistoryMessageList(map);
+	}
+
+	@Override
+	public int getHistoryMessageCount(Map<String, Object> map) {
+		return userMessageDao.getHistoryMessageCount(map);
+	}
 	
 }

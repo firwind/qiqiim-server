@@ -117,7 +117,7 @@ public class ImConnertorImpl implements ImConnertor{
 	public void close(ChannelHandlerContext hander,MessageWrapper wrapper) {
 		String sessionId = getChannelSessionId(hander);
         if (StringUtils.isNotBlank(sessionId)) {
-        	sessionManager.removeSession(sessionId);
+        	close(sessionId); 
             log.warn("connector close channel sessionId -> " + sessionId + ", ctx -> " + hander.toString());
         }
 	}
@@ -126,9 +126,9 @@ public class ImConnertorImpl implements ImConnertor{
 	public void close(String sessionId) {
 		   try {
 	        	Session session = sessionManager.getSession(sessionId);
-	      		if (session != null && session.isConnected()) {
-	      			session.close();
-	      			sessionManager.removeSession(sessionId);
+	      		if (session != null) {
+	      			ImChannelGroup.broadcast(proxy.getOffLineStateMsg(sessionId));
+	      			sessionManager.removeSession(sessionId); 
 	      		  log.info("connector close sessionId -> " + sessionId + " success " );
 	      		}
 	        } catch (Exception e) {
@@ -150,6 +150,8 @@ public class ImConnertorImpl implements ImConnertor{
                   Session session = sessionManager.createSession(wrapper, ctx);
                   sessionManager.addSession(session);
                   setChannelSessionId(ctx, sessionId);
+                  //全员发送上线消息
+                  ImChannelGroup.broadcast(proxy.getOnLineStateMsg(sessionId));
                   log.info("create channel attr sessionId " + sessionId + " successful, ctx -> " + ctx.toString());
               }
         } catch (Exception e) {

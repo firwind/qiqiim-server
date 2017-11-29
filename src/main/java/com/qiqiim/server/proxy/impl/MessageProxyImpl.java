@@ -94,7 +94,7 @@ public class MessageProxyImpl implements MessageProxy {
     	try{
     		UserMessageEntity  userMessage = convertMessageWrapperToBean(message);
     		if(userMessage!=null){
-    			userMessage.setIsread(0);
+    			userMessage.setIsread(1);
             	userMessageServiceImpl.save(userMessage);
     		}
     	}catch(Exception e){
@@ -143,6 +143,28 @@ public class MessageProxyImpl implements MessageProxy {
 
 	public void setRebotProxy(RebotProxy rebotProxy) {
 		this.rebotProxy = rebotProxy;
+	}
+
+
+
+	@Override
+	public MessageProto.Model getOnLineStateMsg(String sessionId) {
+		MessageProto.Model.Builder  result = MessageProto.Model.newBuilder();
+		result.setTimeStamp(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+		result.setSender(sessionId);//存入发送人sessionId
+		result.setCmd(Constants.CmdType.ONLINE);
+		return result.build();
+	}
+
+
+
+	@Override
+	public MessageProto.Model getOffLineStateMsg(String sessionId) {
+		MessageProto.Model.Builder  result = MessageProto.Model.newBuilder();
+		result.setTimeStamp(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+		result.setSender(sessionId);//存入发送人sessionId
+		result.setCmd(Constants.CmdType.OFFLINE);
+		return result.build();
 	}
 
 

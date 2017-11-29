@@ -23,5 +23,17 @@ public interface MessageProxy {
      * @param message
      */
     void  saveOfflineMessageToDB(MessageWrapper message);
+    /**
+     * 获取上线状态消息
+     * @param sessionId
+     * @return
+     */
+    MessageProto.Model  getOnLineStateMsg(String sessionId);
+    /**
+     * 获取下线状态消息
+     * @param sessionId
+     * @return
+     */
+    MessageProto.Model  getOffLineStateMsg(String sessionId);
 }
 

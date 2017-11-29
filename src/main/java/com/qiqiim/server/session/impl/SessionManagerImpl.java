@@ -61,10 +61,8 @@ public class SessionManagerImpl implements SessionManager {
     public synchronized void removeSession(String sessionId) {
     	try{
     		Session session = getSession(sessionId);
-    		 if (session != null) {
-    			 ImChannelGroup.remove(session.getSession());
-    			 session.close();
-    		 }
+    		ImChannelGroup.remove(session.getSession());
+    		session.close(); 
     	}catch(Exception e){
     		
     	}finally{

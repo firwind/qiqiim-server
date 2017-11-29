@@ -288,7 +288,19 @@
           	    	   var message1 = new proto.Model();
                        message1.setCmd(1);
                        socket.send(message1.serializeBinary());
-          	       }else{
+          	       }else if(msg.getCmd()==3){
+          	    	  if(msg.getSender()!=currentsession){
+          	    		layer.msg("用户"+msg.getSender()+"上线了");  
+          	    		$("#usersession option[value='"+msg.getSender()+"']").remove(); 
+          	    		var option = $("<option>").val(msg.getSender()).text(msg.getSender()).attr("selected",true); 
+              	    	$("#usersession").append(option);  
+          	    	  } 
+          	       }else if(msg.getCmd()==4){
+           	    	  if(msg.getSender()!=currentsession){
+            	    		layer.msg("用户"+msg.getSender()+"下线了");  
+            	    		$("#usersession option[value='"+msg.getSender()+"']").remove(); 
+            	       }    
+            	   }else if(msg.getCmd()==5){
           	    	   //显示非自身消息    
           	    	   if(msg.getSender()!=currentsession){
           	    		   //不显示用户组消息

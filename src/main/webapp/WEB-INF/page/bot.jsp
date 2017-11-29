@@ -283,7 +283,7 @@
           	    	   var message1 = new proto.Model();
                        message1.setCmd(1);
                        socket.send(message1.serializeBinary());
-          	       }else{
+          	       }else  if(msg.getCmd()==5){
           	    	   //显示非自身消息    
           	    	   if(msg.getSender()!=currentsession){
           	    		   //不显示用户组消息

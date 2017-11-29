@@ -31,6 +31,31 @@
   	  
   </sql>
 
+
+   <select id="getHistoryMessageList" resultType="com.qiqiim.webserver.user.model.UserMessageEntity" >
+		   SELECT
+			  a.id,
+			  a.senduser,
+			  b.name sendusername , 
+			  ifnull(b.profilephoto,'layui/images/0.jpg') avatar,
+			  a.content,
+			  a.createuser,
+			  a.createdate,
+			  a.updatedate
+			FROM  user_message  a 
+			LEFT JOIN user_info b ON b.uid=a.senduser
+			where (a.senduser =#{senduser} AND a.receiveuser =#{receiveuser} )  OR  (a.senduser =#{receiveuser} AND a.receiveuser =#{senduser}  )  ORDER BY id DESC   
+			<if test="offset != null and limit != null">
+			   limit #{offset}, #{limit}
+		    </if>
+	</select>	
+		
+	<select id="getHistoryMessageCount" resultType="int" >
+		   select  count(1)
+			from  user_message  a 
+		   where (a.senduser =#{senduser} AND a.receiveuser =#{receiveuser} )  OR  (a.senduser =#{receiveuser} AND a.receiveuser =#{senduser}  )      
+	</select>	
+
 	<select id="queryObject" resultType="com.qiqiim.webserver.user.model.UserMessageEntity">
 		select  <include refid="Base_Column_List" />  from user_message where id = #{value}
 	</select>

@@ -19,6 +19,10 @@ public class UserMessageEntity extends BaseModel{
  
 	//发送人
 	private String senduser;
+	//发送人昵称或姓名
+	private String sendusername;
+	//发送人头像
+	private String avatar;
 	//接收人
 	private String receiveuser;
 	//群ID
@@ -30,8 +34,19 @@ public class UserMessageEntity extends BaseModel{
 	//消息内容
 	private String content;
  
-
  
+	public String getSendusername() {
+		return sendusername;
+	}
+	public void setSendusername(String sendusername) {
+		this.sendusername = sendusername;
+	}
+	public String getAvatar() {
+		return avatar;
+	}
+	public void setAvatar(String avatar) {
+		this.avatar = StringUtils.isNotEmpty(avatar)?avatar:"layui/images/0.jpg";//avatar;
+	}
 	/**
 	 * 设置：发送人
 	 */

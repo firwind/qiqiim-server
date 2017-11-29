@@ -16,11 +16,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.alibaba.fastjson.JSONArray;
 import com.qiqiim.constant.Constants;
+import com.qiqiim.webserver.user.model.UserAccountEntity;
 
 
 public class BaseController {
@@ -200,7 +202,30 @@ public class BaseController {
     }  
  
 
-	  
+    /**
+	 * 保存登录用户
+	 * */
+	protected void setLoginUser(UserAccountEntity u) {
+		request.getSession().setAttribute("user",u);
+	}
+	
+	/**
+     * 取得登录用户
+     * @return
+     */
+     public UserAccountEntity getLoginUser(){
+    	 UserAccountEntity user=null;
+    	 user = (UserAccountEntity)request.getSession().getAttribute("user");
+    	 return user;
+     } 
+     
+     /**
+      * 移除用户
+      * */
+     public void removeUser(HttpServletResponse response){
+    	 request.getSession().setAttribute("user",null);
+    	 request.getSession().removeAttribute("user");
+     }  
  
 	
 }

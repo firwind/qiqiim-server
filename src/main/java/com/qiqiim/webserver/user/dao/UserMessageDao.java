@@ -1,4 +1,7 @@
 package com.qiqiim.webserver.user.dao;
+import java.util.List;
+import java.util.Map;
+
 import com.qiqiim.webserver.base.dao.BaseDao;
 import com.qiqiim.webserver.user.model.UserMessageEntity;
 
@@ -10,5 +13,17 @@ import com.qiqiim.webserver.user.model.UserMessageEntity;
  * @date 2017-11-23 10:47:47
  */
 public interface UserMessageDao extends BaseDao<UserMessageEntity> {
+	/**
+	 * 获取历史记录
+	 * @param map
+	 * @return
+	 */
+	List<UserMessageEntity> getHistoryMessageList(Map<String, Object> map);
+	/**
+	 * 获取历史记录总条数
+	 * @param map
+	 * @return
+	 */
+	int getHistoryMessageCount(Map<String, Object> map);
 	
 }
