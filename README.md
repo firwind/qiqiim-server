@@ -8,11 +8,13 @@ Java后端和js消息采用Google Protobuf传输
 
 项目可以直接生成后台代码、页面及js文件，大大节省开发时间
 
-目前实现了单聊 群聊 及机器人回复功能，项目已经结合Mysql数据库，聊天的信息会保存到数据库表中，后续会跟layim结合完成，如果有更好的需求或想法可以联系我 
+目前实现了单聊 群聊 及机器人回复功能，项目已经结合Mysql数据库，聊天的信息会保存到数据库表中，已经跟layim结合完成，如果有更好的需求或想法可以联系我 
 
 QQ群：532696201
 
-项目运行图
+
+ **项目运行图** 
+
 ![首页](https://gitee.com/uploads/images/2017/1129/135448_76529268_1644780.png "QQ图片20171129135331.png")
 ![单聊](https://gitee.com/uploads/images/2017/1124/131757_0d40833f_1644780.png "图片2.png")
 ![群聊](https://gitee.com/uploads/images/2017/1124/131808_e55369c4_1644780.png "图片3.png")
@@ -21,7 +23,7 @@ QQ群：532696201
 ![消息管理](https://gitee.com/uploads/images/2017/1124/131851_3ed48ae6_1644780.png "图片6.png")
 ![代码生成](https://gitee.com/uploads/images/2017/1124/131901_05fbcb63_1644780.png "图片7.png")
 
-以下为结合Layim实现的功能截图
+ **以下为结合Layim实现的功能截图** 
 
 ![输入图片说明](https://gitee.com/uploads/images/2017/1129/135512_76c8644f_1644780.png "QQ图片20171129134102.png")
 ![输入图片说明](https://gitee.com/uploads/images/2017/1129/135546_8cfed41d_1644780.png "QQ图片20171129134130.png")
