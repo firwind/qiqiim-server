@@ -21,7 +21,6 @@ import com.qiqiim.server.connertor.impl.ImConnertorImpl;
 import com.qiqiim.server.model.MessageWrapper;
 import com.qiqiim.server.model.proto.MessageProto;
 import com.qiqiim.server.proxy.MessageProxy;
-import com.qiqiim.server.test.data.MessageData;
 import com.qiqiim.util.ImUtils;
 @Sharable
 public class ImServerHandler  extends ChannelInboundHandlerAdapter{

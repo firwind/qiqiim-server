@@ -6,21 +6,20 @@
  */
 package com.qiqiim.server;
 
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.qiqiim.constant.Constants;
 import com.qiqiim.server.connertor.impl.ImConnertorImpl;
 import com.qiqiim.server.model.MessageWrapper;
 import com.qiqiim.server.model.proto.MessageProto;
 import com.qiqiim.server.proxy.MessageProxy;
-import com.qiqiim.server.test.data.MessageData;
 import com.qiqiim.util.ImUtils;
 
 public class ImWebSocketServerHandler   extends SimpleChannelInboundHandler<MessageProto.Model>{
