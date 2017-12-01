@@ -22,22 +22,24 @@ public interface SessionManager {
      */
     void addSession(Session session);
 
-    void updateSession(String sessionId);
+    void updateSession(Session session);
  
-
-    /**
-     * 删除指定session
-     *
-     * @param session
-     */
-    void removeSession(Session session);
 
     /**
      * 删除指定session
      *
      * @param sessionId
      */
-    void removeSession(String sessionId);
+     void removeSession(String sessionId);
+
+    /**
+     * 删除指定session
+     * 
+     *
+     * @param sessionId
+     * @param nid  is socketid 
+     */
+     void removeSession(String sessionId,String nid);
 
     /**
      * 根据指定sessionId获取session

@@ -24,7 +24,7 @@
 	layui.use(['layer', 'jquery'], function(){
 	  var layer = layui.layer
 	  ,$ = layui.jquery;  
-	  var socket;
+	  
 	  var currentsession= "${sessionScope.user.id}";
 	  var lm = null;
 	 
@@ -144,13 +144,7 @@
 			  //console.log(status); //获得online或者hide
 			  //websocket发送在线或离线消息给好友
 		  }); 
-		   
-		  if (!window.WebSocket) {
-		      window.WebSocket = window.MozWebSocket; 
-		  }  
-		  if (window.WebSocket) {
-	          socket = new WebSocket(websocketurl);
-	          socket.binaryType = "arraybuffer"; 
+	    var initEventHandle = function () {
 	          //收到消息后
 	          socket.onmessage = function(event) {
 	          	  if (event.data instanceof ArrayBuffer){
@@ -236,10 +230,18 @@
 	          //连接关闭
 	          socket.onclose = function(event) {
 	        	  layim.setFriendStatus(currentsession, 'offline');
+	        	  layer.confirm('您已下线，重新上线?', function(index){
+	        		  //do something
+	        		  reconnect(websocketurl,initEventHandle); 
+	        		  layer.close(index);
+	        	  }); 
 		      };
-	      } else {
-	          layer.msg("你的浏览器不支持websocket！");
-	      }
+		      socket.onerror = function () {
+		          reconnect(websocketurl,initEventHandle);
+		      };
+	    }  
+	    
+	    createWebSocket(websocketurl,initEventHandle);
    });  
    
 	  

@@ -233,7 +233,6 @@
 	layui.use(['layer',  'jquery'], function(){
 	  var layer = layui.layer 
 	  ,$ = layui.jquery;  
-	  var socket;
 	  var currentsession= "${pageContext.session.id}";
 	  //回复消息
 	  var reMsg=function(sender,time,msg){
@@ -263,14 +262,8 @@
 	    	$("#chatcontent").scrollTop( $("#chatcontent")[0].scrollHeight); 
 	  }
 	  
+  var initEventHandle = function () {   
 	  
-	  if (!window.WebSocket) {
-	      window.WebSocket = window.MozWebSocket; 
-	  }  
-	 
-	  if (window.WebSocket) {
-          socket = new WebSocket(websocketurl);
-          socket.binaryType = "arraybuffer"; 
           //收到消息后
           socket.onmessage = function(event) {
           	  if (event.data instanceof ArrayBuffer){
@@ -320,13 +313,15 @@
           };
           //连接关闭
           socket.onclose = function(event) {
-        	  reMsg("","","连接已关闭,欢迎下次光临！");
+        	  reconnect(websocketurl,initEventHandle); 
 	      };
-      } else {
-    	  layer.msg("你的浏览器不支持websocket！");
-      }
-	  
+	      socket.onerror = function () {
+	          reconnect(websocketurl,initEventHandle);
+	      };
+	 }  	  
 
+    createWebSocket(websocketurl,initEventHandle);  
+  
 	 $("#winsend").on("click",function(){
 		 
 		 if (!window.WebSocket) {

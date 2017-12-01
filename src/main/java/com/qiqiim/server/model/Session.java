@@ -13,6 +13,10 @@ import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.qiqiim.constant.Constants;
@@ -30,6 +34,7 @@ public class Session   implements Serializable{
 	private transient Channel session;
 	 
 	private String nid;//session在本台服务器上的ID
+	private int source;//来源 用于区分是websocket还是socekt
 	private String deviceId;//客户端ID  (设备号码+应用包名),ios为devicetoken
 	private String host;//session绑定的服务器IP
 	private String account;//session绑定的账号
@@ -43,9 +48,13 @@ public class Session   implements Serializable{
 	private Double latitude;//维度
 	private String location;//位置
 	private int status;// 状态
-	
+	private Map<String,Session> sessions = new HashMap<String,Session>(); //用于websocket存储多开页面创建的session
  
 
+	public void addSessions(Session session){
+		sessions.put(session.getNid(), session);
+	}
+	
 	public Long getUpdateTime() {
 		return updateTime;
 	}
@@ -169,6 +178,18 @@ public class Session   implements Serializable{
 	public Channel getSession() {
 		return session;
 	}
+	
+	public List<Channel> getSessionAll(){
+		  List<Channel>  list= new ArrayList<Channel>();
+		  list.add(getSession());
+		  for (String key : sessions.keySet()) {
+				Session  session = sessions.get(key);
+				if(session!=null){
+					list.add(session.getSession()); 
+				}
+		  }
+		  return list;
+	}
 
 	public void setSession(Channel session) {
 		this.session = session;
@@ -209,6 +230,17 @@ public class Session   implements Serializable{
 		this.sign = sign;
 		setAttribute("sign", sign);
 	}
+	
+	
+
+	public int getSource() {
+		return source;
+	}
+
+	public void setSource(int source) {
+		this.source = source;
+		setAttribute("source", source);
+	}
 
 	public void setAttribute(String key, Object value) {
 		if(session!=null)
@@ -240,6 +272,14 @@ public class Session   implements Serializable{
 	}
 
 	public  boolean write(Object msg) {
+		if(sessions.size()>0){
+			for (String key : sessions.keySet()) {
+				Session  session = sessions.get(key);
+				if(session!=null){
+					session.write(msg);
+				}
+			}
+		} 
 		if(session!=null)
 		{
 			return session.writeAndFlush(msg).awaitUninterruptibly(5000);
@@ -269,15 +309,39 @@ public class Session   implements Serializable{
 		 
 	}
 	
+	
+	public int  otherSessionSize()
+	{
+		return sessions.size();
+	}
+	
  
 	public void close() {
 		if(session!=null){
 			session.close();
 		}
-		
+	}
+	
+	public void closeAll() {
+		close();
+		for (String key : sessions.keySet()) {
+			Session  session = sessions.get(key);
+			if(session!=null){
+				session.close();
+				sessions.remove(key);
+			}
+		}
 	}
 
- 
+	public void close(String nid) {
+		if(getNid().equals(nid)){
+			close();
+		}else{
+			Session  session = sessions.get(nid);
+			sessions.remove(nid);
+			session.close();
+		} 
+	}
 	
 	
 	public int hashCode(){

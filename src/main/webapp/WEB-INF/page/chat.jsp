@@ -242,7 +242,6 @@
 	layui.use(['layer', 'jquery'], function(){
 	  var layer = layui.layer
 	  ,$ = layui.jquery;  
-	  var socket;
 	  var currentsession= "${pageContext.session.id}";
 	  //回复消息
 	  var reMsg=function(sender,time,msg){
@@ -271,73 +270,74 @@
 	    	$("#chatcontent").scrollTop( $("#chatcontent")[0].scrollHeight); 
 	  }
 	  
-	  //初始化websocket
-	  if (!window.WebSocket) {
-	      window.WebSocket = window.MozWebSocket; 
-	  }  
-	  if (window.WebSocket) {
-          socket = new WebSocket(websocketurl);
-          socket.binaryType = "arraybuffer"; 
-          //收到消息后
-          socket.onmessage = function(event) {
-          	  if (event.data instanceof ArrayBuffer){
-          	       var msg =  proto.Model.deserializeBinary(event.data);      //如果后端发送的是二进制帧（protobuf）会收到前面定义的类型
-          	       //心跳消息
-          	       if(msg.getCmd()==2){
-          	    	   //发送心跳回应
-          	    	   var message1 = new proto.Model();
-                       message1.setCmd(1);
-                       socket.send(message1.serializeBinary());
-          	       }else if(msg.getCmd()==3){
-          	    	  if(msg.getSender()!=currentsession){
-          	    		layer.msg("用户"+msg.getSender()+"上线了");  
-          	    		$("#usersession option[value='"+msg.getSender()+"']").remove(); 
-          	    		var option = $("<option>").val(msg.getSender()).text(msg.getSender()).attr("selected",true); 
-              	    	$("#usersession").append(option);  
-          	    	  } 
-          	       }else if(msg.getCmd()==4){
-           	    	  if(msg.getSender()!=currentsession){
-            	    		layer.msg("用户"+msg.getSender()+"下线了");  
-            	    		$("#usersession option[value='"+msg.getSender()+"']").remove(); 
-            	       }    
-            	   }else if(msg.getCmd()==5){
-          	    	   //显示非自身消息    
-          	    	   if(msg.getSender()!=currentsession){
-          	    		   //不显示用户组消息
-          	    		   if(msg.getGroupid()==null||msg.getGroupid().length<1){
-          	    			 var msgCon =  proto.MessageBody.deserializeBinary(msg.getContent()); 
-              	    	     reMsg(msg.getSender(),msg.getTimestamp(),msgCon.getContent());
-          	    		   } 
-          	    	   } 
-          	       }
-          	  }else {
-                    var data = event.data;                //后端返回的是文本帧时触发
-              } 
-          };
-          //连接后
-          socket.onopen = function(event) {
-        	   var message = new proto.Model();
-        	   var browser=BrowserUtil.info();
-	   	       message.setVersion("1.0");
-	   	       message.setDeviceid("")
-	   	       message.setCmd(1);
-	   	       message.setSender(currentsession);
-	   	       message.setMsgtype(1); 
-	   	       message.setFlag(1);
-	   	       message.setPlatform(browser.name);
-	   	       message.setPlatformversion(browser.version);
-	   	       message.setToken(currentsession);
-	   	       var bytes = message.serializeBinary();  
-               socket.send(bytes);
-          };
-          //连接关闭
-          socket.onclose = function(event) {
-        	  reMsg("","","连接已关闭,欢迎下次光临！");
-	      };
-      } else {
-          layer.msg("你的浏览器不支持websocket！");
+     var initEventHandle = function () {
+    	 
+     
+              //收到消息后
+              socket.onmessage = function(event) {
+              	  if (event.data instanceof ArrayBuffer){
+              	       var msg =  proto.Model.deserializeBinary(event.data);      //如果后端发送的是二进制帧（protobuf）会收到前面定义的类型
+              	       //心跳消息
+              	       if(msg.getCmd()==2){
+              	    	   //发送心跳回应
+              	    	   var message1 = new proto.Model();
+                           message1.setCmd(1);
+                           socket.send(message1.serializeBinary());
+              	       }else if(msg.getCmd()==3){
+              	    	  if(msg.getSender()!=currentsession){
+              	    		layer.msg("用户"+msg.getSender()+"上线了");  
+              	    		$("#usersession option[value='"+msg.getSender()+"']").remove(); 
+              	    		var option = $("<option>").val(msg.getSender()).text(msg.getSender()).attr("selected",true); 
+                  	    	$("#usersession").append(option);  
+              	    	  } 
+              	       }else if(msg.getCmd()==4){
+               	    	  if(msg.getSender()!=currentsession){
+                	    		layer.msg("用户"+msg.getSender()+"下线了");  
+                	    		$("#usersession option[value='"+msg.getSender()+"']").remove(); 
+                	       }    
+                	   }else if(msg.getCmd()==5){
+              	    	   //显示非自身消息    
+              	    	   if(msg.getSender()!=currentsession){
+              	    		   //不显示用户组消息
+              	    		   if(msg.getGroupid()==null||msg.getGroupid().length<1){
+              	    			 var msgCon =  proto.MessageBody.deserializeBinary(msg.getContent()); 
+                  	    	     reMsg(msg.getSender(),msg.getTimestamp(),msgCon.getContent());
+              	    		   } 
+              	    	   } 
+              	       }
+              	  }else {
+                        var data = event.data;                //后端返回的是文本帧时触发
+                  } 
+              };
+              //连接后
+              socket.onopen = function(event) {
+            	   var message = new proto.Model();
+            	   var browser=BrowserUtil.info();
+    	   	       message.setVersion("1.0");
+    	   	       message.setDeviceid("")
+    	   	       message.setCmd(1);
+    	   	       message.setSender(currentsession);
+    	   	       message.setMsgtype(1); 
+    	   	       message.setFlag(1);
+    	   	       message.setPlatform(browser.name);
+    	   	       message.setPlatformversion(browser.version);
+    	   	       message.setToken(currentsession);
+    	   	       var bytes = message.serializeBinary();  
+                   socket.send(bytes);
+              };
+              //连接关闭
+              socket.onclose = function(event) {
+            	  reconnect(websocketurl,initEventHandle); 
+    	      };
+    	      socket.onerror = function () {
+    	          reconnect(websocketurl,initEventHandle);
+    	      };
+          
       }
 	  
+	  
+      createWebSocket(websocketurl,initEventHandle);
+      
      //发送消息
 	 $("#winsend").on("click",function(){
 		  if (!window.WebSocket) {

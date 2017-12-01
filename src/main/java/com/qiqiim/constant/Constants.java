@@ -42,6 +42,10 @@ public class Constants {
         public static final int MAX_AGGREGATED_CONTENT_LENGTH = 65536;
         
         public static final String REBOT_SESSIONID="0";//机器人SessionID
+        
+        public static final int WEBSOCKET = 1;//websocket标识
+        
+        public static final int SOCKET =0;//socket标识
     }
     
     public static interface SessionConfig{

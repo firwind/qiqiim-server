@@ -192,12 +192,7 @@ layui.use(['jquery','mobile' ], function(){
 		  $.get("/user/onlinestate",{ state: stateVal }); */
 	   });  
 	  
-	  if (!window.WebSocket) {
-	      window.WebSocket = window.MozWebSocket; 
-	  }  
-	  if (window.WebSocket) {
-          socket = new WebSocket(websocketurl);
-          socket.binaryType = "arraybuffer"; 
+	  var initEventHandle = function () {
           //收到消息后
           socket.onmessage = function(event) {
           	  if (event.data instanceof ArrayBuffer){
@@ -282,10 +277,18 @@ layui.use(['jquery','mobile' ], function(){
           //连接关闭
           socket.onclose = function(event) {
         	  layim.setFriendStatus(currentsession, 'offline');
+        	  layer.confirm('您已下线，重新上线?', function(index){
+        		  //do something
+        		  reconnect(websocketurl,initEventHandle); 
+        		  layim.setFriendStatus(currentsession, 'oline');
+        		  layer.close(index);
+        	  });
+	      }; 
+	      socket.onerror = function () {
+	          reconnect(websocketurl,initEventHandle);
 	      };
-      } else {
-          layer.msg("你的浏览器不支持websocket！");
-      } 
+      }  
+	  createWebSocket(websocketurl,initEventHandle);
 	  
  }); 
 

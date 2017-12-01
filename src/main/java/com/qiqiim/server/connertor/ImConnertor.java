@@ -40,6 +40,8 @@ public interface ImConnertor {
 	 void close(ChannelHandlerContext hander,MessageWrapper wrapper);
 	 
 	 void close(String sessionId);
+	 
+	 void close(ChannelHandlerContext hander);
 	  
 	 void connect(ChannelHandlerContext ctx, MessageWrapper wrapper) ;
 

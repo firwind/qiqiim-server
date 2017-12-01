@@ -57,8 +57,7 @@ public class ImServerHandler  extends ChannelInboundHandlerAdapter{
 	    	
 	     	if(lastTime != null && System.currentTimeMillis() - lastTime >= Constants.ImserverConfig.PING_TIME_OUT)
 	     	{
-	     		String sessionId = connertor.getChannelSessionId(ctx);
-	     		connertor.close(sessionId);
+	     		connertor.close(ctx);
 	     		//ctx.channel().close();
 	     	}
 	     	ctx.channel().attr(Constants.SessionConfig.SERVER_SESSION_HEARBEAT).set(null);
@@ -129,6 +128,8 @@ public class ImServerHandler  extends ChannelInboundHandlerAdapter{
      * @param wrapper
      */
     private void receiveMessages(ChannelHandlerContext hander, MessageWrapper wrapper) {
+    	//设置消息来源为socket
+    	wrapper.setSource(Constants.ImserverConfig.SOCKET);
         if (wrapper.isConnect()) {
        	    connertor.connect(hander, wrapper); 
         } else if (wrapper.isClose()) {

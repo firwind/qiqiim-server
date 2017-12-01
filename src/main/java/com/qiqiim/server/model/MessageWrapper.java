@@ -41,6 +41,7 @@ public class MessageWrapper implements Serializable {
 	private MessageProtocol protocol;
     private String sessionId;//请求人
     private String reSessionId;//接收人
+    private int source;//来源 用于区分是websocket还是socekt
     private Object body;
 
     private MessageWrapper() {
@@ -122,5 +123,14 @@ public class MessageWrapper implements Serializable {
 	public void setReSessionId(String reSessionId) {
 		this.reSessionId = reSessionId;
 	}
+
+	public int getSource() {
+		return source;
+	}
+
+	public void setSource(int source) {
+		this.source = source;
+	}
+ 
 
 }

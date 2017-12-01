@@ -55,8 +55,7 @@ public class ImWebSocketServerHandler   extends SimpleChannelInboundHandler<Mess
 	    	
 	     	if(lastTime != null && System.currentTimeMillis() - lastTime >= Constants.ImserverConfig.PING_TIME_OUT)
 	     	{
-	     		String sessionId = connertor.getChannelSessionId(ctx);
-	     		connertor.close(sessionId);
+	     		connertor.close(ctx);
 	     	}
 	     	ctx.channel().attr(Constants.SessionConfig.SERVER_SESSION_HEARBEAT).set(null);
 	    }
@@ -122,6 +121,8 @@ public class ImWebSocketServerHandler   extends SimpleChannelInboundHandler<Mess
      * @param wrapper
      */
     private void receiveMessages(ChannelHandlerContext hander, MessageWrapper wrapper) {
+    	//设置消息来源为Websocket
+    	wrapper.setSource(Constants.ImserverConfig.WEBSOCKET);
         if (wrapper.isConnect()) {
        	    connertor.connect(hander, wrapper); 
         } else if (wrapper.isClose()) {
