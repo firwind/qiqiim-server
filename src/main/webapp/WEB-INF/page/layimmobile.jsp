@@ -30,7 +30,6 @@ layui.use(['jquery','mobile' ], function(){
          ,$ = layui.jquery 
          ,laytpl = layui.laytpl
          ,layer = mobile.layer;
-	     var socket;
 		 var currentsession= "${sessionScope.user.id}";
 	     data = null; 
 	     
@@ -277,12 +276,15 @@ layui.use(['jquery','mobile' ], function(){
           //连接关闭
           socket.onclose = function(event) {
         	  layim.setFriendStatus(currentsession, 'offline');
-        	  layer.confirm('您已下线，重新上线?', function(index){
-        		  //do something
-        		  reconnect(websocketurl,initEventHandle); 
-        		  layim.setFriendStatus(currentsession, 'oline');
-        		  layer.close(index);
-        	  });
+        	  layer.open({
+        		    content: '您已下线，重新上线?'
+        		    ,btn: ['确定', '取消']
+        		    ,yes: function(index){
+        		      reconnect(websocketurl,initEventHandle); 
+                      layim.setFriendStatus(currentsession, 'oline');
+        		      layer.close(index);
+        		    }
+        	  });  
 	      }; 
 	      socket.onerror = function () {
 	          reconnect(websocketurl,initEventHandle);
