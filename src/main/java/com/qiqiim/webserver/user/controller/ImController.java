@@ -250,7 +250,11 @@ public class ImController extends BaseController{
 	public Object userMessageCount(HttpServletResponse response,HttpServletRequest request,
 			RedirectAttributes redirectAttributes) throws Exception{
 		Map<String,Object> map =new HashMap<String,Object>();
-		map.put("receiveuser", getLoginUser().getId().toString());
+		if(getLoginUser()!=null){
+			map.put("receiveuser", getLoginUser().getId().toString());
+		}else{
+			map.put("receiveuser", request.getSession().getId());
+		}
 		List<UserMessageEntity> list = userMessageServiceImpl.getOfflineMessageList(map);
 		return JSONArray.toJSON(list);
 	} 

@@ -270,6 +270,26 @@
 	    	$("#chatcontent").scrollTop( $("#chatcontent")[0].scrollHeight); 
 	  }
 	  
+ 	 //拉取离线消息
+      var showOfflineMsg = function (){
+     	 $.ajax({
+ 			  type : "post",
+ 			  url : "getofflinemsg",
+ 			  async : true,
+ 			  success : function(data){ 
+ 				  var dataObj=eval("("+data+")");
+ 			      if(dataObj!=null&&dataObj.length>0){
+ 			    	  for(var i =0;i<dataObj.length;i++){
+ 			    		 var  username = dataObj[i].id+dataObj[i].sendusername ;
+ 			    		 var  timestamp = dataObj[i].createdate;
+ 			    		 var msg = dataObj[i].content;
+ 			    		 reMsg(username,timestamp,msg) ;
+ 			    	  }   
+ 				  } 
+ 			  }
+ 		  }); 
+      }
+	  
      var initEventHandle = function () {
     	 
      
@@ -324,13 +344,19 @@
     	   	       message.setToken(currentsession);
     	   	       var bytes = message.serializeBinary();  
                    socket.send(bytes);
+                   showOfflineMsg();
               };
               //连接关闭
               socket.onclose = function(event) {
-            	  reconnect(websocketurl,initEventHandle); 
+            	  layer.confirm('您已下线，重新上线?', function(index){
+            		  reconnect(websocketurl,initEventHandle); 
+	        		  layer.close(index);
+	        		  showOfflineMsg();
+	        	  }); 
     	      };
     	      socket.onerror = function () {
     	          reconnect(websocketurl,initEventHandle);
+    	          showOfflineMsg();
     	      };
           
       }
