@@ -154,7 +154,30 @@ layui.use(['jquery','mobile' ], function(){
 				  ,groupid: 1 //所在的分组id
 				  ,id: "0" //好友id
 				  ,sign: "有什么问题尽管问我把" //好友签名
-		  });   
+		  }); 
+		  
+		  //取得离线消息
+		  $.ajax({
+			  type : "post",
+			  url : "getofflinemsg",
+			  async : true,
+			  success : function(data){ 
+				  var dataObj=eval("("+data+")");
+			      if(dataObj!=null&&dataObj.length>0){
+			    	  for(var i =0;i<dataObj.length;i++){
+			    		  layim.getMessage({
+					 	        username: dataObj[i].sendusername
+					 	        ,avatar: dataObj[i].avatar+"?"+new Date().getTime()
+					 	        ,id: dataObj[i].senduser
+					 	        ,type: "friend"
+					 	        ,content: dataObj[i].content
+					 	        ,timestamp: dataObj[i].createdate
+				 	       }); 
+			    	  }   
+				  } 
+			  }
+		  }); 
+		  
 	   }); 
 	  //监听发送消息
 	  layim.on('sendMessage', function(data){

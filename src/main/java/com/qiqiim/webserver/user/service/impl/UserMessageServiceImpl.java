@@ -61,5 +61,13 @@ public class UserMessageServiceImpl implements UserMessageService {
 	public int getHistoryMessageCount(Map<String, Object> map) {
 		return userMessageDao.getHistoryMessageCount(map);
 	}
+
+	@Override
+	public List<UserMessageEntity> getOfflineMessageList(Map<String, Object> map) {
+		 List<UserMessageEntity> result = userMessageDao.getOfflineMessageList(map);
+		 //更新状态为已读状态
+		 userMessageDao.updatemsgstate(map);
+		 return result;
+	}
 	
 }

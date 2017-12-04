@@ -25,5 +25,18 @@ public interface UserMessageDao extends BaseDao<UserMessageEntity> {
 	 * @return
 	 */
 	int getHistoryMessageCount(Map<String, Object> map);
+	/**
+	 * 获取离线消息
+	 * @param map
+	 * @return
+	 */
+	List<UserMessageEntity> getOfflineMessageList(Map<String, Object> map);
+	
+	/**
+	 * 修改消息为已读状态
+	 * @param map
+	 * @return
+	 */
+	int updatemsgstate(Map<String, Object> map);
 	
 }

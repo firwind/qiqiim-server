@@ -98,18 +98,26 @@
 					  ,id: "0" //好友id
 					  ,sign: "有什么问题尽管问我把" //好友签名
 			  }); 
-			  
-			  //取得最新消息条数
+			  layim.msgbox(2); //模拟消息盒子有新消息，实际使用时，一般是动态获得 
+			  //取得离线消息
 			  $.ajax({
-				  type : "get",
-				  url : "messagecount",
-				  async : false,
+				  type : "post",
+				  url : "getofflinemsg",
+				  async : true,
 				  success : function(data){ 
-				      if(data>0){
-				    	  if(lm!=null){
-				    		  layim.msgbox(data); //模拟消息盒子有新消息，实际使用时，一般是动态获得 
-				    	  }
-					   } 
+					  var dataObj=eval("("+data+")");
+				      if(dataObj!=null&&dataObj.length>0){
+				    	  for(var i =0;i<dataObj.length;i++){
+				    		  layim.getMessage({
+						 	        username: dataObj[i].sendusername
+						 	        ,avatar: dataObj[i].avatar+"?"+new Date().getTime()
+						 	        ,id: dataObj[i].senduser
+						 	        ,type: "friend"
+						 	        ,content: dataObj[i].content
+						 	        ,timestamp: dataObj[i].createdate
+					 	       }); 
+				    	  }   
+					  } 
 				  }
 			  }); 
 			  

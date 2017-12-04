@@ -238,18 +238,21 @@ public class ImController extends BaseController{
 		return "message";
 	}
 	/**
-	 * 模拟系统消息数量
+	 * 取得离线消息
 	 * @param response
 	 * @param request
 	 * @param redirectAttributes
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/messagecount", method = RequestMethod.GET)
+	@RequestMapping(value = "/getofflinemsg", produces="text/html;charset=UTF-8",method = RequestMethod.POST)
 	@ResponseBody
 	public Object userMessageCount(HttpServletResponse response,HttpServletRequest request,
 			RedirectAttributes redirectAttributes) throws Exception{
-		return JSON.toJSON(2);
+		Map<String,Object> map =new HashMap<String,Object>();
+		map.put("receiveuser", getLoginUser().getId().toString());
+		List<UserMessageEntity> list = userMessageServiceImpl.getOfflineMessageList(map);
+		return JSONArray.toJSON(list);
 	} 
 	
 	/**

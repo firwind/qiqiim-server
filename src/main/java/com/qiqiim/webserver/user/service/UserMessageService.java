@@ -34,6 +34,12 @@ public interface UserMessageService {
 	 */
 	List<UserMessageEntity> getHistoryMessageList(Map<String, Object> map);
 	/**
+	 * 获取离线消息
+	 * @param map
+	 * @return
+	 */
+	List<UserMessageEntity> getOfflineMessageList(Map<String, Object> map);
+	/**
 	 * 获取历史记录总条数
 	 * @param map
 	 * @return
