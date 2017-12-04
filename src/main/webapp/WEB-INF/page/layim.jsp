@@ -43,7 +43,30 @@
            message.setContent(content.serializeBinary())
            socket.send(message.serializeBinary()); 
 	  }
-
+	 //拉取离线消息
+     var showOfflineMsg = function (layim){
+    	 $.ajax({
+			  type : "post",
+			  url : "getofflinemsg",
+			  async : true,
+			  success : function(data){ 
+				  var dataObj=eval("("+data+")");
+			      if(dataObj!=null&&dataObj.length>0){
+			    	  for(var i =0;i<dataObj.length;i++){
+			    		  layim.getMessage({
+					 	        username: dataObj[i].sendusername
+					 	        ,avatar: dataObj[i].avatar+"?"+new Date().getTime()
+					 	        ,id: dataObj[i].senduser
+					 	        ,type: "friend"
+					 	        ,content: dataObj[i].content
+					 	        ,timestamp: dataObj[i].createdate
+				 	       }); 
+			    	  }   
+				  } 
+			  }
+		  }); 
+     }
+	  
 	  
   
 	 layui.use('layim', function(layim){
@@ -100,26 +123,7 @@
 			  }); 
 			  layim.msgbox(2); //模拟消息盒子有新消息，实际使用时，一般是动态获得 
 			  //取得离线消息
-			  $.ajax({
-				  type : "post",
-				  url : "getofflinemsg",
-				  async : true,
-				  success : function(data){ 
-					  var dataObj=eval("("+data+")");
-				      if(dataObj!=null&&dataObj.length>0){
-				    	  for(var i =0;i<dataObj.length;i++){
-				    		  layim.getMessage({
-						 	        username: dataObj[i].sendusername
-						 	        ,avatar: dataObj[i].avatar+"?"+new Date().getTime()
-						 	        ,id: dataObj[i].senduser
-						 	        ,type: "friend"
-						 	        ,content: dataObj[i].content
-						 	        ,timestamp: dataObj[i].createdate
-					 	       }); 
-				    	  }   
-					  } 
-				  }
-			  }); 
+			  showOfflineMsg(layim)
 			  
 		   });
 		  //监听发送消息
@@ -239,13 +243,14 @@
 	          socket.onclose = function(event) {
 	        	  layim.setFriendStatus(currentsession, 'offline');
 	        	  layer.confirm('您已下线，重新上线?', function(index){
-	        		  //do something
 	        		  reconnect(websocketurl,initEventHandle); 
 	        		  layer.close(index);
+	        		  showOfflineMsg(layim)
 	        	  }); 
 		      };
 		      socket.onerror = function () {
 		          reconnect(websocketurl,initEventHandle);
+		          showOfflineMsg(layim)
 		      };
 	    }  
 	    

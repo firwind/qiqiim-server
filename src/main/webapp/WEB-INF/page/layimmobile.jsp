@@ -49,6 +49,30 @@ layui.use(['jquery','mobile' ], function(){
 	           message.setContent(content.serializeBinary())
 	           socket.send(message.serializeBinary()); 
 		  }
+		  
+	 	 //拉取离线消息
+	      var showOfflineMsg = function (layim){
+	     	 $.ajax({
+	 			  type : "post",
+	 			  url : "getofflinemsg",
+	 			  async : true,
+	 			  success : function(data){ 
+	 				  var dataObj=eval("("+data+")");
+	 			      if(dataObj!=null&&dataObj.length>0){
+	 			    	  for(var i =0;i<dataObj.length;i++){
+	 			    		  layim.getMessage({
+	 					 	        username: dataObj[i].sendusername
+	 					 	        ,avatar: dataObj[i].avatar+"?"+new Date().getTime()
+	 					 	        ,id: dataObj[i].senduser
+	 					 	        ,type: "friend"
+	 					 	        ,content: dataObj[i].content
+	 					 	        ,timestamp: dataObj[i].createdate
+	 				 	       }); 
+	 			    	  }   
+	 				  } 
+	 			  }
+	 		  }); 
+	      }
 
 	     
 	     
@@ -157,26 +181,7 @@ layui.use(['jquery','mobile' ], function(){
 		  }); 
 		  
 		  //取得离线消息
-		  $.ajax({
-			  type : "post",
-			  url : "getofflinemsg",
-			  async : true,
-			  success : function(data){ 
-				  var dataObj=eval("("+data+")");
-			      if(dataObj!=null&&dataObj.length>0){
-			    	  for(var i =0;i<dataObj.length;i++){
-			    		  layim.getMessage({
-					 	        username: dataObj[i].sendusername
-					 	        ,avatar: dataObj[i].avatar+"?"+new Date().getTime()
-					 	        ,id: dataObj[i].senduser
-					 	        ,type: "friend"
-					 	        ,content: dataObj[i].content
-					 	        ,timestamp: dataObj[i].createdate
-				 	       }); 
-			    	  }   
-				  } 
-			  }
-		  }); 
+		  showOfflineMsg(layim)
 		  
 	   }); 
 	  //监听发送消息
@@ -306,35 +311,21 @@ layui.use(['jquery','mobile' ], function(){
         		      reconnect(websocketurl,initEventHandle); 
                       layim.setFriendStatus(currentsession, 'oline');
         		      layer.close(index);
+        		      showOfflineMsg(layim)
         		    }
-        	  });  
+        	  });
+        	 
 	      }; 
 	      socket.onerror = function () {
 	          reconnect(websocketurl,initEventHandle);
+	          showOfflineMsg(layim)
 	      };
       }  
 	  createWebSocket(websocketurl,initEventHandle);
 	  
  }); 
 
-   function showMsg(){
-	   if(msgs!=null){
-			for(var i=0;i<msgs.length;i++){
-				var message = msgs[i];
-				var content =  message.content.replace(/\r?\n/g,  '<br>') ; 
-				lm.getMessage({
-					      username: message.username
-					      ,avatar: message.file
-					      ,id: message.user
-					      ,type: "friend"
-					      ,cid: Math.random()*100000|0  
-					      ,content: content
-					      ,timestamp: new Date().getTime()
-				}); 
-			} 
-	  }   
-	   
-   }
+ 
   
 </script>
 </body>
