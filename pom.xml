@@ -4,8 +4,8 @@
   <groupId>com.qiqiim</groupId>
   <artifactId>qiqiim-server</artifactId>
   <packaging>war</packaging>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>qiqiim-server Maven Webapp</name>
+  <version>0.3</version>
+  <name>qiqiim-server dev Webapp</name>
   <url>http://maven.apache.org</url>
  <properties>
   	<springversion>4.3.7.RELEASE</springversion>  
