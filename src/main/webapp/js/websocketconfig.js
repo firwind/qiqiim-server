@@ -3,8 +3,7 @@ var reconnectflag = false;//避免重复连接
 var socket;
 
 function createWebSocket(url,callbak) {
-   // try {
-     
+   try { 
       if (!window.WebSocket) {
   	      window.WebSocket = window.MozWebSocket; 
   	  }  
@@ -14,12 +13,10 @@ function createWebSocket(url,callbak) {
         callbak();
   	  } else {
           layer.msg("你的浏览器不支持websocket！");
-      } 
-       
-   // } catch (e) {
-   // 	alert(555)
-    //    reconnect(url);
-   // }     
+      }  
+    } catch (e) { 
+       reconnect(url,callbak);
+    }     
 }
  
 

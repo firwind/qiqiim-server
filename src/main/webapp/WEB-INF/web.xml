@@ -71,6 +71,40 @@
       <url-pattern>/druid/*</url-pattern>
     </servlet-mapping>
     
+    <servlet>    
+          <servlet-name>dwr-invoker</servlet-name>    
+          <servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>    
+          <init-param>  
+		    <param-name>org.directwebremoting.extend.ScriptSessionManager</param-name>  
+		    <param-value>com.qiqiim.webserver.dwrmanage.session.DwrScriptSessionManagerImpl</param-value>  
+		  </init-param>  
+          <init-param>    
+            <param-name>debug</param-name>    
+            <param-value>true</param-value>    
+          </init-param>    
+          <init-param>    
+            <param-name>activeReverseAjaxEnabled</param-name>    
+            <param-value>true</param-value>    
+          </init-param>    
+          <init-param>    
+            <param-name>pollAndCometEnabled</param-name>    
+            <param-value>true</param-value>    
+          </init-param>    
+          <init-param>    
+            <param-name>crossDomainSessionSecurity</param-name>    
+            <param-value>false</param-value>    
+          </init-param>    
+          <init-param>    
+            <param-name>allowScriptTagRemoting</param-name>    
+            <param-value>true</param-value>    
+          </init-param>    
+         <!--  <load-on-startup>2</load-on-startup>     -->
+     </servlet>    
+    <servlet-mapping>    
+      <servlet-name>dwr-invoker</servlet-name>    
+      <url-pattern>/dwr/*</url-pattern>    
+    </servlet-mapping>  
+    
     
    <error-page>
     	<error-code>404</error-code>

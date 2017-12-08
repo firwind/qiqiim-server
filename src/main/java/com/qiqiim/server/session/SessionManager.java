@@ -10,6 +10,8 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.util.Set;
 
+import org.directwebremoting.ScriptSession;
+
 import com.qiqiim.server.model.MessageWrapper;
 import com.qiqiim.server.model.Session;
  
@@ -71,6 +73,8 @@ public interface SessionManager {
     int getSessionCount();
  
     Session createSession(MessageWrapper wrapper, ChannelHandlerContext ctx);
+    
+    Session createSession(ScriptSession scriptSession, String sessionid);
     
     boolean exist(String sessionId) ;
     

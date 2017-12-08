@@ -18,8 +18,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.directwebremoting.ScriptBuffer;
+import org.directwebremoting.ScriptSession;
+
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.qiqiim.constant.Constants;
+import com.qiqiim.server.model.proto.MessageBodyProto;
+import com.qiqiim.server.model.proto.MessageProto;
 
 public class Session   implements Serializable{
 
@@ -32,9 +38,10 @@ public class Session   implements Serializable{
 	 */
 	private static final long serialVersionUID = 8269505210699191257L;
 	private transient Channel session;
+	private ScriptSession dwrsession;
 	 
 	private String nid;//session在本台服务器上的ID
-	private int source;//来源 用于区分是websocket还是socekt
+	private int source;//来源 用于区分是websocket\socket\dwr
 	private String deviceId;//客户端ID  (设备号码+应用包名),ios为devicetoken
 	private String host;//session绑定的服务器IP
 	private String account;//session绑定的账号
@@ -48,12 +55,12 @@ public class Session   implements Serializable{
 	private Double latitude;//维度
 	private String location;//位置
 	private int status;// 状态
-	private Map<String,Session> sessions = new HashMap<String,Session>(); //用于websocket存储多开页面创建的session
- 
+	private Map<String,Session> sessions = new HashMap<String,Session>(); //用于dwr websocket存储多开页面创建的session
 
 	public void addSessions(Session session){
 		sessions.put(session.getNid(), session);
 	}
+	 
 	
 	public Long getUpdateTime() {
 		return updateTime;
@@ -64,8 +71,12 @@ public class Session   implements Serializable{
 		setAttribute("updateTime", updateTime);
 	}
 
- 
 
+	public Session(ScriptSession session) {
+		this.dwrsession = session;
+		this.nid = session.getId();
+	}
+	 
 	public Session(Channel session) {
 		this.session = session;
 		this.nid = session.id().asShortText();
@@ -77,6 +88,16 @@ public class Session   implements Serializable{
 	}
 	
 	 
+	public ScriptSession getDwrsession() {
+		return dwrsession;
+	}
+
+
+	public void setDwrsession(ScriptSession dwrsession) {
+		this.dwrsession = dwrsession;
+	}
+
+
 	public String getAccount() {
 		return account;
 	}
@@ -280,19 +301,42 @@ public class Session   implements Serializable{
 				}
 			}
 		} 
-		if(session!=null)
+		if(session!=null&&isConnected())
 		{
 			return session.writeAndFlush(msg).awaitUninterruptibly(5000);
-		}
-		
+		}else if(dwrsession!=null&&isConnected()){
+			try{
+				MessageProto.Model  msgModel = (MessageProto.Model)msg;
+				MessageBodyProto.MessageBody  content = MessageBodyProto.MessageBody.parseFrom(msgModel.getContent());    
+			 
+				Map<String,Object> map = new HashMap<String,Object>();
+				map.put("user", Constants.DWRConfig.JSONFORMAT.printToString(msgModel));
+				map.put("content", Constants.DWRConfig.JSONFORMAT.printToString(content));
+				ScriptBuffer script = new ScriptBuffer();  
+				script.appendCall(Constants.DWRConfig.DWR_SCRIPT_FUNCTIONNAME, JSONArray.toJSON(map));  
+				dwrsession.addScript(script);
+				//protobuf 不支持低版本IE 没法使用protobuf  支持可以使用以下方法
+				/*MessageProto.Model  msgModel = (MessageProto.Model)msg;
+				ScriptBuffer script = new ScriptBuffer();  
+				Object json = JSONArray.toJSON(msgModel.toByteArray());
+				script.appendCall(Constants.DWRConfig.DWR_SCRIPT_FUNCTIONNAME, json);  
+				dwrsession.addScript(script); */
+				return  true; 
+			}catch(Exception e){
+				
+			}
+		} 
 		return false;
 	}
 
+	
 	public boolean isConnected() {
 		if(session != null)
 		{
 			return session.isActive();
-		}  
+		}else if(dwrsession!=null){
+			return !dwrsession.isInvalidated();
+		}
 		return false;
 	}
 
@@ -319,6 +363,8 @@ public class Session   implements Serializable{
 	public void close() {
 		if(session!=null){
 			session.close();
+		}else if(dwrsession!=null){
+			dwrsession.invalidate();
 		}
 	}
 	
