@@ -1,75 +1,74 @@
 package com.qiqiim.webserver.dwrmanage;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptBuffer;
 import org.directwebremoting.ScriptSession;
 import org.directwebremoting.ScriptSessionFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.alibaba.fastjson.JSONArray;
+import com.qiqiim.constant.Constants;
+import com.qiqiim.server.model.MessageWrapper;
+import com.qiqiim.server.model.proto.MessageBodyProto;
+import com.qiqiim.server.model.proto.MessageProto;
 
 public class DwrUtil {
     /**
-     * 调用页面javascript函数
-     * @param functionName
-     * @param args
+     * 发送给全部
      */
-   /* public void invokeJavascriptFunction (String _funcName, List _args){
-        final String funcName = _funcName;
-        final List args = _args;
-        Browser.withAllSessions(new Runnable(){ 
-            private ScriptBuffer script = new ScriptBuffer(); 
-            public void run(){ 
-                //拼接javascript
-                script = script.appendScript(funcName+"(");
-                for(int i=0; i<args.size(); i++){
-                    if(i != 0){
-                        script = script.appendScript(",");
-                    }
-                    script = script.appendData(args.get(i));
-                }
-                script.appendScript(")"); 
-                //System.out.println(script.toString());   
-                 
-                Collection<ScriptSession> sessions = Browser.getTargetSessions(); 
-                for (ScriptSession scriptSession : sessions){ 
-                    scriptSession.addScript(script); 
-                } 
-            } 
-        });
-    }*/
-    
-    public static void sendMessageAuto(String userid, String message) {  
-    	  
-        final String userId = userid;  
-  
-        final String autoMessage = message;  
-        final String OP_ID = "userId";  
-          
+    public static void sedMessageToAll(MessageProto.Model  msgModel){
+      
+    	 
+        try{
+			  MessageBodyProto.MessageBody  content = MessageBodyProto.MessageBody.parseFrom(msgModel.getContent());    
+			  Map<String,Object> map = new HashMap<String,Object>();
+			  map.put("user", Constants.DWRConfig.JSONFORMAT.printToString(msgModel));
+			  map.put("content", Constants.DWRConfig.JSONFORMAT.printToString(content));
+			  final Object msg = JSONArray.toJSON(map);
+			  Browser.withAllSessions(new Runnable(){ 
+		            private ScriptBuffer script = new ScriptBuffer(); 
+		            public void run(){ 
+		            	script.appendCall(Constants.DWRConfig.DWR_SCRIPT_FUNCTIONNAME, msg);  
+		                Collection<ScriptSession> sessions = Browser.getTargetSessions(); 
+		                for (ScriptSession scriptSession : sessions){ 
+		                    scriptSession.addScript(script); 
+		                } 
+		            } 
+		       });
+		  }catch(Exception e){
+			  
+		  } 
+    } 
+    /**
+     * 发送给个人
+     */
+    public static void sendMessageToUser(String userid, String message) {  
+        final String sessionid = userid;  
+        final String msg = message;  
+        final String attributeName = Constants.SessionConfig.SESSION_KEY;  
         Browser.withAllSessionsFiltered(new ScriptSessionFilter() {  
-  
             public boolean match(ScriptSession session) {  
-                if (session.getAttribute(OP_ID) == null)  
+                if (session.getAttribute(attributeName) == null)  
                     return false;  
                 else {  
-                    boolean f = session.getAttribute(OP_ID).equals(userId);  
+                    boolean f = session.getAttribute(attributeName).equals(sessionid);  
                     return f;  
                 }  
             }  
-  
         }, new Runnable() {  
-  
             private ScriptBuffer script = new ScriptBuffer();  
-  
             public void run() {  
-  
-                script.appendCall("showMessage", autoMessage);  
+                script.appendCall(Constants.DWRConfig.DWR_SCRIPT_FUNCTIONNAME, msg);  
                 Collection<ScriptSession> sessions = Browser.getTargetSessions();  
                 for (ScriptSession scriptSession : sessions) {  
                     scriptSession.addScript(script);  
-                }  
-  
-            }  
-  
+                }   
+            }   
         });  
   
     }  

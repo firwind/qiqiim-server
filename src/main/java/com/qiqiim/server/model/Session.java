@@ -308,7 +308,6 @@ public class Session   implements Serializable{
 			try{
 				MessageProto.Model  msgModel = (MessageProto.Model)msg;
 				MessageBodyProto.MessageBody  content = MessageBodyProto.MessageBody.parseFrom(msgModel.getContent());    
-			 
 				Map<String,Object> map = new HashMap<String,Object>();
 				map.put("user", Constants.DWRConfig.JSONFORMAT.printToString(msgModel));
 				map.put("content", Constants.DWRConfig.JSONFORMAT.printToString(content));

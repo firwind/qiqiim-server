@@ -11,6 +11,8 @@
     <script type="text/javascript" src="js/util.js"></script>  
   <script type="text/javascript" src="js/message.js"></script>  
   <script type="text/javascript" src="js/messagebody.js"></script>   
+  <script type='text/javascript' src='dwr/engine.js'></script>
+  <script type='text/javascript' src='dwr/interface/Imwebserver.js'></script>
 </head>
 <body>
 <div id="container" class="wrap" style="left: 464px; height: 566px; right: auto;"><!--990宽度时请计算margin-top=（屏幕高度-990px）/2-->
@@ -139,7 +141,7 @@
 		     <div class="r-area fr" id="jRightArea">
 		            <ul id="sidenav" class="side-nav clearfix">
 		                    <li id="grkj" class="side-nav-item fl current" data-type="48">
-		                        <a id="tab-space" href="javascript:void(0);">机器人客服</a>
+		                        <a id="tab-space" href="javascript:;">机器人客服</a>
 		                    <i class="side-nav-new"></i></li>
 		                <li style="_display: none;"><div class="tab_arrow" style="left: 0;"><b></b></div></li>
 		            </ul>
@@ -159,9 +161,9 @@
 								</div>
 							</div>
 							<ul class="space-btn-group">
-								<li class="space-btn-tx"><a href="javascript:;"><i></i>调戏TA</a></li>
-								<li class="space-btn-xh"><a href="javascript:;"><i></i>讲笑话</a></li>
-								<li class="space-btn-ds"><a href="javascript:;"><i></i>文学</a></li>
+								<li class="space-btn-tx"><a href="#"  ><i></i>调戏TA</a></li>
+								<li class="space-btn-xh"><a href="javascript:;" ><i></i>讲笑话</a></li>
+								<li class="space-btn-ds"><a href="javascript:;"  ><i></i>文学</a></li>
 							</ul>
 						</div>
 					 </div>
@@ -232,11 +234,12 @@
 <script src="layui/layui.js"></script>
 <script src="js/websocketconfig.js"></script>
 <script>
+   var currentsession= "${pageContext.session.id}";
+   var showmsg;
 	//一般直接写在一个js文件中
 	layui.use(['layer', 'jquery'], function(){
 	  var layer = layui.layer
 	  ,$ = layui.jquery;  
-	  var currentsession= "${pageContext.session.id}";
 	  //回复消息
 	  var reMsg=function(sender,time,msg){
 		  var content = $(".remsg").html();
@@ -258,11 +261,38 @@
            content.setType(0)
            message.setContent(content.serializeBinary())
            socket.send(message.serializeBinary());
-           var content = $(".mymsg").html();
-	    	   content  =content.replace("{content}",msg).replace("{sender}",currentsession)
-	        $("#chatcontent").append(content);
-	    	$("#chatcontent").scrollTop( $("#chatcontent")[0].scrollHeight); 
 	  }
+	  
+  	 
+      showmsg = function(data){
+    	  var msg = eval("("+data.user+")");
+	   	   var content = eval("("+data.content+")"); 
+	   	   if(msg.cmd==3){
+	   	    	  if(msg.sender!=currentsession){
+	   	    		layer.msg("用户"+msg.sender+"上线了");  
+	   	    	  } 
+	   	   }else if(msg.cmd==4){
+	    	       if(msg.sender!=currentsession){
+	     	    		layer.msg("用户"+msg.sender+"下线了");  
+	     	       }    
+	     	   }else if(msg.cmd==5){
+	   	    	   //显示非自身消息    
+	   	    	   if(msg.sender!=currentsession){
+	   	    		   //不显示用户组消息
+	   	    		   if(msg.groupId==null||msg.groupId.length<1){
+	       	    	     reMsg(msg.sender,msg.timeStamp,content.content);
+	   	    		   } 
+	   	    	   } 
+	   	   } 
+	   	   /* 
+			以下代码只适合ie10以上浏览器  无法兼容低版本浏览器
+			var  msgmodel =  proto.Model.deserializeBinary(data);  
+			var  msgbody = proto.MessageBody.deserializeBinary(msgmodel.getContent()); 
+			alert(msgbody.getContent())
+			*/
+    	  
+      }
+	  
 	  
    var initEventHandle = function () { 
           //收到消息后
@@ -307,9 +337,13 @@
           };
           //连接关闭
           socket.onclose = function(event) {
-        	  reconnect(websocketurl,initEventHandle); 
+        	  layer.confirm('您已下线，重新上线?', function(index){
+        		  reconnect(websocketurl,initEventHandle); 
+        		  layer.close(index);
+        	  }); 
 	      };
 	      socket.onerror = function () {
+	    	  layer.msg("服务器连接出错，请检查websocketconfig.js里面的IP地址");  
 	          reconnect(websocketurl,initEventHandle);
 	      };
 	}
@@ -319,69 +353,101 @@
 
 	 $("#winsend").on("click",function(){
 		 
-		 if (!window.WebSocket) {
-	          return;
-	      }
-	      if (socket.readyState == WebSocket.OPEN) {
-	    	  var msg = $("#text-in").val();
-	    	  if(msg.length>0){
-	    		  sendMsg(msg)
-		    	  $("#text-in").val("")
-	    	  }else{
-	    		  layer.msg("请输入要发送的消息!");
-	    	  }
-	      } else {
-	          layer.msg("连接没有开启！");
-	      }
-		 
+		  var reUser = "0";
+		  var msg = $("#text-in").val();
+    	  if(msg.length>0){
+    		  if (!window.WebSocket) {
+    			  Imwebserver.sendMsg(reUser,msg);
+    	      }else{
+    	    	  if (socket.readyState == WebSocket.OPEN) {
+	    	    	  sendMsg(msg)
+	    	      } else {
+	    	          layer.msg("连接没有开启！");
+	    	      }	 
+    	      } 
+    	     var content = $(".mymsg").html();
+	    	 content  =content.replace("{content}",msg).replace("{sender}",currentsession)
+	         $("#chatcontent").append(content);
+	    	 $("#chatcontent").scrollTop( $("#chatcontent")[0].scrollHeight); 
+	    	 $("#text-in").val("")
+    	  }else{
+    		  layer.msg("请输入要发送的消息!");
+    	  } 
 	 }) 
 	 
 	 var txkeyword =["你是猪","你叫什么？","你几岁？","你会做饭吗？","你喜欢我嘛","你会唱歌吗？","你怎么成复读机了","我爱你","卖个萌让我开心一下","你喜欢干什么？","你有女朋友吗？","你是男是女","你妈呢","你爸呢"]
 	 //调戏
 	 $(".space-btn-tx").on("click",function(){
-		 if (!window.WebSocket) {
-	          return;
+		  var reUser = "0";
+		  var msg = txkeyword[Math.round(Math.random()*13)];
+		  if (!window.WebSocket) {
+			  Imwebserver.sendMsg(reUser,msg);
+	      }else{
+	    	  if (socket.readyState == WebSocket.OPEN) {
+	    		  sendMsg(msg)
+	   	      } else {
+	   	          layer.msg("连接没有开启！");
+	   	      }	 
 	      }
-	      if (socket.readyState == WebSocket.OPEN) {
-	    	  sendMsg(txkeyword[Math.round(Math.random()*13)])
-	      } else {
-	          layer.msg("连接没有开启！");
-	      }
-		 
+		  var content = $(".mymsg").html();
+    	  content  =content.replace("{content}",msg).replace("{sender}",currentsession)
+          $("#chatcontent").append(content);
+    	  $("#chatcontent").scrollTop( $("#chatcontent")[0].scrollHeight); 
+    	  $("#text-in").val("")
+	     return false;
+
 	 }) 
 	 var xhkeyword =["讲个笑话","讲个冷笑话","讲个段子"]
 	 //笑话
 	 $(".space-btn-xh").on("click",function(){
-		 if (!window.WebSocket) {
-	          return;
-	      }
-	      if (socket.readyState == WebSocket.OPEN) {
-	    	  sendMsg(xhkeyword[Math.round(Math.random()*2)])
-	      } else {
-	          layer.msg("连接没有开启！");
-	      }
-		 
+		  var reUser = "0";
+		  var msg = xhkeyword[Math.round(Math.random()*2)];
+		  if (!window.WebSocket) {
+			 Imwebserver.sendMsg(reUser,msg);
+	      }else{
+	    	  if (socket.readyState == WebSocket.OPEN) {
+		    	  sendMsg(msg)
+		      } else {
+		          layer.msg("连接没有开启！");
+		      }
+	    	  
+	      } 
+	      var content = $(".mymsg").html();
+    	  content  =content.replace("{content}",msg).replace("{sender}",currentsession)
+          $("#chatcontent").append(content);
+    	  $("#chatcontent").scrollTop( $("#chatcontent")[0].scrollHeight); 
+    	  $("#text-in").val("")
+	      return false; 
 	 }) 
 	 
 	 var wxkeyword =["李白是谁","王之涣是谁","杜甫是谁","你是猪"]
 	 //文学
 	 $(".space-btn-ds").on("click",function(){
+		 var reUser = "0";
+		 var msg = wxkeyword[Math.round(Math.random()*3)];
 		 if (!window.WebSocket) {
-	          return;
+			 Imwebserver.sendMsg(reUser,msg);
+	      }else{
+	    	  if (socket.readyState == WebSocket.OPEN) {
+		    	  sendMsg(msg)
+		      } else {
+		          layer.msg("连接没有开启！");
+		      }
 	      }
-	      if (socket.readyState == WebSocket.OPEN) {
-	    	  sendMsg(wxkeyword[Math.round(Math.random()*3)])
-	      } else {
-	          layer.msg("连接没有开启！");
-	      }
-		 
-	 }) 
-	 
-	 
- 
-	 
+		  var content = $(".mymsg").html();
+    	  content  =content.replace("{content}",msg).replace("{sender}",currentsession)
+          $("#chatcontent").append(content);
+    	  $("#chatcontent").scrollTop( $("#chatcontent")[0].scrollHeight); 
+    	  $("#text-in").val("")
+	      return false; 
+	 })  
 	  
 	});
+	
+	 //dwr推送消息方法
+	 function showMessage(data) {  
+		  showmsg(data); 
+	 }	
 </script> 
 
  

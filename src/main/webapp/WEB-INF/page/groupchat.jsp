@@ -11,6 +11,8 @@
     <script type="text/javascript" src="js/util.js"></script>  
   <script type="text/javascript" src="js/message.js?v=1"></script>  
   <script type="text/javascript" src="js/messagebody.js"></script>   
+  <script type='text/javascript' src='dwr/engine.js'></script>
+  <script type='text/javascript' src='dwr/interface/Imwebserver.js'></script>
   <style>
 	.flow-default{width: auto; height: 460px; overflow: auto; font-size: 0;}
 	.flow-default li{display: inline-block; margin: 0 5px; font-size: 14px; width: 96%;  margin-bottom: 10px; height: 60px; line-height: 25px; text-align: left; background-color: #eee;}
@@ -229,11 +231,12 @@
 <script src="layui/layui.js"></script>
 <script src="js/websocketconfig.js"></script>
 <script>
+  var currentsession= "${pageContext.session.id}";
+  var showmsg;
 	//一般直接写在一个js文件中
 	layui.use(['layer',  'jquery'], function(){
 	  var layer = layui.layer 
 	  ,$ = layui.jquery;  
-	  var currentsession= "${pageContext.session.id}";
 	  //回复消息
 	  var reMsg=function(sender,time,msg){
 		  var content = $(".remsg").html();
@@ -255,12 +258,36 @@
            content.setType(0)
            message.setContent(content.serializeBinary())
            socket.send(message.serializeBinary());
-           var ct = HtmlUtil.htmlEncodeByRegExp(msg);
-           var content = $(".mymsg").html();
-	    	   content  =content.replace("{content}",ct).replace("{sender}",currentsession)
-	        $("#chatcontent").append(content);
-	    	$("#chatcontent").scrollTop( $("#chatcontent")[0].scrollHeight); 
 	  }
+	  
+      showmsg = function(data){
+    	  var msg = eval("("+data.user+")");
+	   	   var content = eval("("+data.content+")"); 
+	   	   if(msg.cmd==3){
+	   	    	  if(msg.sender!=currentsession){
+	   	    		layer.msg("用户"+msg.sender+"上线了");  
+	   	    	  } 
+	   	   }else if(msg.cmd==4){
+	    	       if(msg.sender!=currentsession){
+	     	    		layer.msg("用户"+msg.sender+"下线了");  
+	     	       }    
+	       }else if(msg.cmd==5){
+	   	    	   //显示非自身消息    
+	   	    	   if(msg.sender!=currentsession){
+	   	    		   //不显示用户组消息
+	   	    		   if(msg.groupId==null||msg.groupId.length<1){
+	       	    	     reMsg(msg.sender,msg.timeStamp,content.content);
+	   	    		   } 
+	   	    	   } 
+	   	   } 
+	   	   /* 
+			以下代码只适合ie10以上浏览器  无法兼容低版本浏览器
+			var  msgmodel =  proto.Model.deserializeBinary(data);  
+			var  msgbody = proto.MessageBody.deserializeBinary(msgmodel.getContent()); 
+			alert(msgbody.getContent())
+			*/
+    	  
+      }
 	  
   var initEventHandle = function () {   
 	  
@@ -313,9 +340,13 @@
           };
           //连接关闭
           socket.onclose = function(event) {
-        	  reconnect(websocketurl,initEventHandle); 
+        	  layer.confirm('您已下线，重新上线?', function(index){
+        		  reconnect(websocketurl,initEventHandle); 
+        		  layer.close(index);
+        	  }); 
 	      };
 	      socket.onerror = function () {
+	    	  layer.msg("服务器连接出错，请检查websocketconfig.js里面的IP地址");  
 	          reconnect(websocketurl,initEventHandle);
 	      };
 	 }  	  
@@ -324,24 +355,36 @@
   
 	 $("#winsend").on("click",function(){
 		 
-		 if (!window.WebSocket) {
-	          return;
-	      }
-	      if (socket.readyState == WebSocket.OPEN) {
-	    	  var msg = $("#text-in").val();
-	    	  if(msg.length>0){
-	    		  sendMsg(msg)
-		    	  $("#text-in").val("")
-	    	  }else{
-	    		  layer.msg("请输入要发送的消息!");
-	    	  }
-	      } else {
-	    	  layer.msg("连接没有开启！");
-	      }
-		 
+		  var groupid = "0";
+		  var msg = $("#text-in").val();
+	   	 
+    	  if(msg.length>0){
+    		  if (!window.WebSocket) {
+    			  Imwebserver.sendGroupMsg(groupid,msg);
+    	      }else{
+    	    	  if (socket.readyState == WebSocket.OPEN) {
+	    	    	  sendMsg(msg)
+	    	      } else {
+	    	          layer.msg("连接没有开启！");
+	    	      }	 
+    	      }
+    		  var ct = HtmlUtil.htmlEncodeByRegExp(msg);
+              var content = $(".mymsg").html();
+   	    	  content  =content.replace("{content}",ct).replace("{sender}",currentsession)
+   	          $("#chatcontent").append(content);
+   	    	  $("#chatcontent").scrollTop( $("#chatcontent")[0].scrollHeight); 
+    	      $("#text-in").val("");
+    	  }else{
+    		  layer.msg("请输入要发送的消息!");
+    	  } 
 	 }) 
 	  
 	});
+
+	 //dwr推送消息方法
+	 function showMessage(data) {  
+		    showmsg(data); 
+	 }
 </script> 
 
  

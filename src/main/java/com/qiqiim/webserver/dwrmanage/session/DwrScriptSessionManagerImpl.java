@@ -15,6 +15,10 @@ import org.slf4j.LoggerFactory;
 
 import com.qiqiim.constant.Constants;
 import com.qiqiim.webserver.user.model.UserAccountEntity;
+
+import eu.bitwalker.useragentutils.Browser;
+import eu.bitwalker.useragentutils.UserAgent;
+import eu.bitwalker.useragentutils.Version;
 //@Service("dwrScriptSessionManagerImpl")
 public class DwrScriptSessionManagerImpl extends DefaultScriptSessionManager{   
     
@@ -35,6 +39,13 @@ public class DwrScriptSessionManagerImpl extends DefaultScriptSessionManager{
                     HttpSession httpSession = ctx.getSession();  
                     ScriptSession scriptSession = ev.getSession();  
                     HttpServletRequest req = ctx.getHttpServletRequest();  
+                    
+                    //获取浏览器信息
+            		Browser browser = UserAgent.parseUserAgentString(req.getHeader("User-Agent")).getBrowser();
+            		//获取浏览器版本号
+            		Version version = browser.getVersion(req.getHeader("User-Agent"));
+            		String info = browser.getName() + "/" + version.getVersion(); 
+                    
                     UserAccountEntity user =  (UserAccountEntity)req.getSession().getAttribute("user");
                     //String userId = (String)httpSession.getAttribute("userId");  
                     String userId =    (String)req.getSession().getId(); //scriptSession.getHttpSessionId();//
@@ -56,7 +67,9 @@ public class DwrScriptSessionManagerImpl extends DefaultScriptSessionManager{
                     httpSession.setAttribute(Constants.DWRConfig.SS_KEY, scriptSession.getId());  
                     scriptSession.setAttribute(Constants.SessionConfig.SESSION_KEY, userId);  
                     scriptSession.setAttribute("SESSIONID", httpSession.getId());  
-                    
+                    scriptSession.setAttribute(Constants.DWRConfig.BROWSER, browser.getName()); 
+                    scriptSession.setAttribute(Constants.DWRConfig.BROWSER_VERSION, version.getVersion());
+                    //scriptSession.setAttribute("ip", value);
                     logger.info(" script session created: " + userId);  
                  }  
                 

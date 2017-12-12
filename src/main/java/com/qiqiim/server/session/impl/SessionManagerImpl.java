@@ -25,6 +25,7 @@ import com.qiqiim.server.model.Session;
 import com.qiqiim.server.model.proto.MessageProto;
 import com.qiqiim.server.proxy.MessageProxy;
 import com.qiqiim.server.session.SessionManager;
+import com.qiqiim.webserver.dwrmanage.DwrUtil;
 
 public class SessionManagerImpl implements SessionManager {
 
@@ -49,7 +50,9 @@ public class SessionManagerImpl implements SessionManager {
         	ImChannelGroup.add(session.getSession());
         }
         //全员发送上线消息
-        ImChannelGroup.broadcast(proxy.getOnLineStateMsg(session.getAccount()));
+        MessageProto.Model model = proxy.getOnLineStateMsg(session.getAccount());
+        ImChannelGroup.broadcast(model);
+        DwrUtil.sedMessageToAll(model);
         log.debug("put a session " + session.getAccount() + " to sessions!");
     }
 
@@ -68,7 +71,9 @@ public class SessionManagerImpl implements SessionManager {
     		if(session!=null){
     			session.closeAll();
 				sessions.remove(sessionId);
-				ImChannelGroup.broadcast(proxy.getOffLineStateMsg(sessionId));
+				MessageProto.Model model = proxy.getOffLineStateMsg(sessionId);
+				ImChannelGroup.broadcast(model);
+				DwrUtil.sedMessageToAll(model);
     		}  
     	}catch(Exception e){
     		
@@ -87,13 +92,17 @@ public class SessionManagerImpl implements SessionManager {
     				//判断没有其它session后 从SessionManager里面移除
     				if(session.otherSessionSize()<1){
     					sessions.remove(sessionId);
-    					ImChannelGroup.broadcast(proxy.getOffLineStateMsg(sessionId));
+    					MessageProto.Model model = proxy.getOffLineStateMsg(sessionId);
+    					ImChannelGroup.broadcast(model);
+    					DwrUtil.sedMessageToAll(model);
     					//dwr全员消息广播
     				} 
     			} else{
     				session.close();
     				sessions.remove(sessionId);
-    				ImChannelGroup.broadcast(proxy.getOffLineStateMsg(sessionId));
+    				MessageProto.Model model = proxy.getOffLineStateMsg(sessionId);
+    				ImChannelGroup.broadcast(model);
+    				DwrUtil.sedMessageToAll(model);
     			}
     		}  
     	}catch(Exception e){
@@ -162,12 +171,12 @@ public class SessionManagerImpl implements SessionManager {
     
 	@Override
 	public Session createSession(ScriptSession scriptSession, String sessionid) {
-		
+		  
 		 Session dwrsession = new Session(scriptSession);
 		 dwrsession.setAccount(sessionid);
 		 dwrsession.setSource(Constants.ImserverConfig.DWR);
-         //dwrsession.setPlatform();
-         //dwrsession.setPlatformVersion();
+         dwrsession.setPlatform((String)scriptSession.getAttribute(Constants.DWRConfig.BROWSER));
+         dwrsession.setPlatformVersion((String)scriptSession.getAttribute(Constants.DWRConfig.BROWSER_VERSION));
 		 dwrsession.setBindTime(System.currentTimeMillis());
 		 dwrsession.setUpdateTime(System.currentTimeMillis());
 		 Session session = sessions.get(sessionid);

@@ -57,6 +57,8 @@ public class Constants {
     public static interface DWRConfig{
     	   public static final String DWR_SCRIPT_FUNCTIONNAME="showMessage";//dwr显示消息的script方法名
     	   public static final String SS_KEY = "scriptSession_Id";  
+    	   public static final String BROWSER = "browser";  
+    	   public static final String BROWSER_VERSION = "browserVersion";  
     	   public static final JsonFormat JSONFORMAT =new JsonFormat();
     }
     

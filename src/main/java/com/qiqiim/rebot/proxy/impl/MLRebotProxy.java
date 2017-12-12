@@ -52,7 +52,7 @@ public class MLRebotProxy implements RebotProxy {
 		 MessageBodyProto.MessageBody.Builder  msgbody =  MessageBodyProto.MessageBody.newBuilder();
 		 msgbody.setContent(message); 
 	     result.setContent(msgbody.build().toByteString());
-		 return new MessageWrapper(MessageWrapper.MessageProtocol.REPLY, Constants.ImserverConfig.REBOT_SESSIONID, user,result);
+		 return new MessageWrapper(MessageWrapper.MessageProtocol.REPLY, Constants.ImserverConfig.REBOT_SESSIONID, user,result.build());
 	}
 
 	public void setApiUrl(String apiUrl) {

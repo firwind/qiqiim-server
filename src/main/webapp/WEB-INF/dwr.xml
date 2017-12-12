@@ -15,9 +15,5 @@
              -->
             <param name="beanName" value="dwrController"></param>  
         </create>   
-        <!-- 自定义类转换器 -->  
-       <!--  <convert converter="bean" match="com.alex.ssm.po.UsersPlus">  
-            <param name="include" value="userid,useraddress,username,userphone,useryear,usersex,userrank"/>  
-        </convert>   -->
     </allow>  
 </dwr>  

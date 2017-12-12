@@ -342,6 +342,12 @@
 		    <artifactId>dwr</artifactId>
 		    <version>3.0.2-RELEASE</version>
 		</dependency>
+		
+		<dependency>
+	         <groupId>eu.bitwalker</groupId>
+	         <artifactId>UserAgentUtils</artifactId>
+	         <version>1.20</version>
+		</dependency>
         
   </dependencies>
   <build>
@@ -363,7 +369,14 @@
                 </configuration>
             </plugin>
     </plugins>
-    
+    <resources>
+        <resource>
+        	<directory>src/main/java</directory>
+        	<includes>
+        		<include>**/*.xml</include>
+        	</includes>
+        </resource>
+    </resources>
     <finalName>qiqiim-server</finalName>
   </build>
 </project>

@@ -8,9 +8,11 @@
 <title>layim</title>
   <link type="text/css" rel="stylesheet" href="css/im.css"/> 
   <link rel="stylesheet" href="layui/css/layui.css">
-    <script type="text/javascript" src="js/util.js"></script>  
+  <script type="text/javascript" src="js/util.js"></script>  
   <script type="text/javascript" src="js/message.js"></script>  
-  <script type="text/javascript" src="js/messagebody.js"></script>   
+  <script type="text/javascript" src="js/messagebody.js"></script> 
+  <script type='text/javascript' src='dwr/engine.js'></script>
+  <script type='text/javascript' src='dwr/interface/Imwebserver.js'></script>  
 </head>
 <body>
 <div id="container" class="wrap" style="left: 464px; height: 566px; right: auto;"><!--990宽度时请计算margin-top=（屏幕高度-990px）/2-->
@@ -20,14 +22,12 @@
 <script src="layui/layui.js"></script>
 <script src="js/websocketconfig.js"></script>
 <script>
+    var currentsession= "${sessionScope.user.id}";
+    var showmsg,lm;
 	//一般直接写在一个js文件中
 	layui.use(['layer', 'jquery'], function(){
 	  var layer = layui.layer
 	  ,$ = layui.jquery;  
-	  
-	  var currentsession= "${sessionScope.user.id}";
-	  var lm = null;
-	 
 	  //发送消息
       var sendMsg=function(msg,receiver,group){ 
     	  var message = new proto.Model(); 
@@ -65,6 +65,68 @@
 				  } 
 			  }
 		  }); 
+     }
+	  
+	 
+     showmsg = function(data){
+   	        var msg = eval("("+data.user+")");
+	   	    var content = eval("("+data.content+")"); 
+		   	var cache = layui.layim.cache();
+			var local = layui.data('layim')[cache.mine.id];
+			var username = "",avatar="",friend=false;
+		    layui.each(cache.friend, function(index1, item1){
+	        layui.each(item1.list, function(index, item){
+	              if(item.id == msg.sender){ 
+	                username = item.username;
+	                avatar = item.avatar;
+	                return friend = true;
+	              }
+	            });
+	            if(friend) return true;
+	        }); 
+	   	 
+	   	   if(msg.cmd==3){
+	   	    	  if(msg.sender!=currentsession){
+	   	    		layer.msg(username+"上线了");  
+	   	    		lm.setFriendStatus(msg.getSender(), 'online');  
+	   	    	  } 
+	   	   }else if(msg.cmd==4){
+	    	       if(msg.sender!=currentsession){
+	     	    		layer.msg(username+"下线了");  
+	     	    		lm.setFriendStatus(msg.getSender(), 'offline');
+	     	       }    
+	     	}else if(msg.cmd==5){
+	   	    	   //显示非自身消息    
+      	    	   if(msg.sender!=currentsession){
+      	    		   //不显示用户组消息
+      	    		   if(msg.groupId==null||msg.groupId.length<1){
+  	    				    lm.getMessage({
+					 	        username: username
+					 	        ,avatar: avatar+"?"+new Date().getTime()
+					 	        ,id: msg.sender
+					 	        ,type: "friend"
+					 	        ,content: content.content
+					 	        ,timestamp:msg.timeStamp 
+				 	     	});   
+      	    		   }else{
+      	    			    lm.getMessage({
+					 	        username: username
+					 	        ,avatar: avatar+"?"+new Date().getTime()
+					 	        ,id: msg.groupId
+					 	        ,type: "group"
+					 	        ,content: content.content
+					 	        ,timestamp: msg.timeStamp
+				 	     	});  
+      	    		   } 
+      	    	  }  
+	   	   } 
+	   	   /* 
+			以下代码只适合ie10以上浏览器  无法兼容低版本浏览器
+			var  msgmodel =  proto.Model.deserializeBinary(data);  
+			var  msgbody = proto.MessageBody.deserializeBinary(msgmodel.getContent()); 
+			alert(msgbody.getContent())
+			*/
+   	  
      }
 	  
 	  
@@ -140,16 +202,24 @@
 		       return;
 		     }   
 		     if (!window.WebSocket) {
-		          return;
-		     }
-		     if (socket.readyState == WebSocket.OPEN) {
-		    	 //判断是发送好友消息还是群消息
+		    	//判断是发送好友消息还是群消息
 		    	 if(To.type=="friend"){
-		    		 sendMsg(message,receiver,null)
+		    		 Imwebserver.sendMsg(receiver,message);
 		    	 }else{
-		    		 sendMsg(message,null,receiver)
-		    	 }   
-		     }  
+		    		 Imwebserver.sendGroupMsg(receiver,message);
+		    	 }  
+		    	 return;
+		     }else{
+		    	 if (socket.readyState == WebSocket.OPEN) {
+			    	 //判断是发送好友消息还是群消息
+			    	 if(To.type=="friend"){
+			    		 sendMsg(message,receiver,null)
+			    	 }else{
+			    		 sendMsg(message,null,receiver)
+			    	 }   
+			     }   
+		     }
+		     
 		  });
 		   
 		  layim.on('online', function(status){
@@ -245,12 +315,10 @@
 	        	  layer.confirm('您已下线，重新上线?', function(index){
 	        		  reconnect(websocketurl,initEventHandle); 
 	        		  layer.close(index);
-	        		  showOfflineMsg(layim)
 	        	  }); 
 		      };
 		      socket.onerror = function () {
 		          reconnect(websocketurl,initEventHandle);
-		          showOfflineMsg(layim)
 		      };
 	    }  
 	    
@@ -259,6 +327,11 @@
    
 	  
  });
+	
+ //dwr推送消息方法
+ function showMessage(data) {  
+	    showmsg(data); 
+ }
 </script> 
 
  
