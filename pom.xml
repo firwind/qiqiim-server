@@ -4,12 +4,13 @@
   <groupId>com.qiqiim</groupId>
   <artifactId>qiqiim-server</artifactId>
   <packaging>war</packaging>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>qiqiim-server Maven Webapp</name>
+  <version>0.3</version>
+  <name>qiqiim-server dev Webapp</name>
   <url>http://maven.apache.org</url>
  <properties>
   	<springversion>4.3.7.RELEASE</springversion>  
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.version>1.7</java.version>
   </properties>
  <dependencies>
     <dependency>
@@ -329,8 +330,53 @@
             <artifactId>protobuf-java</artifactId>
             <version>3.4.0</version>
         </dependency>
+        
+        <dependency>
+		    <groupId>com.googlecode.protobuf-java-format</groupId>
+		    <artifactId>protobuf-java-format</artifactId>
+		    <version>1.4</version>
+		</dependency>
+        
+        <dependency>
+		    <groupId>org.directwebremoting</groupId>
+		    <artifactId>dwr</artifactId>
+		    <version>3.0.2-RELEASE</version>
+		</dependency>
+		
+		<dependency>
+	         <groupId>eu.bitwalker</groupId>
+	         <artifactId>UserAgentUtils</artifactId>
+	         <version>1.20</version>
+		</dependency>
+        
   </dependencies>
   <build>
+      <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.2</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${java.encoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+    </plugins>
+    <resources>
+        <resource>
+        	<directory>src/main/java</directory>
+        	<includes>
+        		<include>**/*.xml</include>
+        	</includes>
+        </resource>
+    </resources>
     <finalName>qiqiim-server</finalName>
   </build>
 </project>

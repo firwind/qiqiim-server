@@ -6,243 +6,227 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>单聊</title>
-  <link type="text/css" rel="stylesheet" href="css/im.css"/> 
+  <link rel="stylesheet" type="text/css" href="css/skin-min.css">
   <link rel="stylesheet" href="layui/css/layui.css">
-    <script type="text/javascript" src="js/util.js"></script>  
+  <script type="text/javascript" src="js/util.js"></script>  
   <script type="text/javascript" src="js/message.js?v=1"></script>  
   <script type="text/javascript" src="js/messagebody.js"></script>   
+  <script type='text/javascript' src='dwr/engine.js'></script>
+  <script type='text/javascript' src='dwr/interface/Imwebserver.js'></script>  
+  <!--[if (IE 6)|(IE 7)|(IE 8)|(IE 9)]>    <![endif]-->
 </head>
 <body>
-<div id="container" class="wrap" style="left: 464px; height: 566px; right: auto;"><!--990宽度时请计算margin-top=（屏幕高度-990px）/2-->
-    <!--蓝色背景头部-->
-    <div class="header" onselectstart="return false">
-        <div class="logo fixPng"></div>
-       
-       <div class="weixin-code">
-            <span class="weixin-img-s" id="jimiWeixinCode">
-                <i class="weixin-icon fixPng"></i>
-                扫码关注
-            </span>
-                        	<span class="weixin-img-b fixPng">微信咨询</span> 
-                    </div>
-       
-        <div class="service-online">
-            <a id="skipToOnlineService" href="#">
-                <i class="service-icon fixPng"></i>
-                在线客服
-            </a>
-        </div>
 
-        <i id="winmax" class="full-screen"  ></i>
-        <i id="winclose_top" class="close-screen" ></i>
-    </div>
-    <!--内容区域-->
-    <div class="container clearfix">
-        <!--左侧聊天区域-->
-        <div class="l-area fl">
-            <div class="l-area-content">
-                <!--全屏时请计算chat-block的高度height=屏幕高度-184px-->
-					<div class="nano has-scrollbar">
-						<div id="master"></div>
-						<div id="chatcontent" class="content chat-block" tabindex="0"
-							style="height: 371px;">
-							<div class="jimi-noLogin-blank" style="height: 30px;"></div>
-							<div class="jimi_lists clearfix">
-								<div class="header_img jimi3 fl"></div>
-								<table class="msg" cellspacing="0" cellpadding="0">
-									<tbody>
-										<tr>
-											<td class="lt"></td>
-											<td class="tt"></td>
-											<td class="rt"></td>
-										</tr>
-										<tr>
-											<td class="lm"><span></span></td>
-											<td class="mm"><span><p>
-														<span style="white-space: normal; line-height: 17.1429px;">Hi~</span>${pageContext.session.id}<span
-															style="white-space: normal; line-height: 17.1429px;">，</span><span
-															style="white-space: normal; line-height: 17.1429px;"><span
-															style="line-height: 17.1429px;">有什么问题尽管问我哦~</span></span>
-													</p></span></td>
-											<td class="rm"></td>
-										</tr>
-										<tr>
-											<td class="lb"></td>
-											<td class="bm"></td>
-											<td class="rb"></td>
-										</tr>
-										<tr>
-											<td></td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-							
-							 
-							 
-						</div>
-						<div id="pop-alert"></div>
-						<div class="pane"
-							style="height: 100%; display: none; opacity: 1; visibility: visible;">
-							<div class="slider" style="height: 396px;"></div>
-						</div>
-						<div class="jimi-noLogin-msgTips">
-							<p>
-								欢迎 ${pageContext.session.id} 
-							</p>
-						</div>
-					</div>
-					<div class="edit-block">
-                    <div class="clearfix">
-                        <div class="inputL"></div>
-                        <!--
-                          全屏时计算inputM宽度=屏幕宽度-980px
-                          注：ie6下多减去3px
-                        -->
-                        <!--<div class="inputM" style="width: 10px;_width:7px;">-->
-                            <div id="sugguestions" class="suggestion-area" style="display: none;">
-                                <table border="0" cellspacing="0" cellpadding="0">
-                                    <tbody>
-                                    <tr>
-                                        <td class="tl"></td>
-                                        <td class="tm"></td>
-                                        <td class="tr"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="ml"></td>
-                                        <td class="mm">
-                                            <ul>
-                                            </ul>
-                                        </td>
-                                        <td class="mr"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="bl"></td>
-                                        <td class="bm"></td>
-                                        <td class="br"></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <!--</div>-->
-                        <!--<div class="inputR"></div>-->
-                        <div class="input-block">
-                            <textarea id="text-in" name="text-in" class="text-type grayInput" autocomplete="off" style="width: 577px; color: rgb(153, 153, 153);"></textarea>
-                        </div>
-                    </div>
-                    <a id="j_satisfy" href="javascript:void(0);" class="satisfaction-percent" ></a>
-                    <!-- <a id="j_teach" href="javascript:void(0);" class="teach" ></a> -->
-                    <!--点击关闭时请加class:close-pressed-->
-                    <i id="winclose" class="close"  ></i>
-                    <!--点击发送时请加class:send-pressed-->
-                    <i id="winsend" class="send"></i>
-                </div>
+     <div class="wrapper">
+     <div class="im-content" style="margin-left: -600px; width: 1200px;"> 
+    <div class="im-main-content"> 
+     <div class="im-left-sidebar"> 
+      <!--<div class="user-info">
+                        <div class="pic"><img src="img/pic01.png" > </div>
+                      </div>--> 
+      <div class="user-info"> 
+       <div class="info-lcol"> 
+        <div class="u-pic"> 
+                    <img alt="用户头像" width="52" height="52" src="img/im/no-img_mid_.jpg"> 
+                            <a id="accountImg" href="#" >
+                   <div class="mask"></div> </a>
+                 </div>
+        <div class="info-m"> 
+         <div class="u-name"> 
+                      <a href="#" >${pageContext.session.id}</a> 
+                   </div>
+                  <div class="u-level">
+            <span class="rank">
+            <a href="https://usergrade.jd.com/user/grade" target="_blank"><s></s></a><a href="https://plus.jd.com/index" target="_blank"><i class="i0"></i></a></span>
             </div>
-        </div>
-        
-        <!--右侧导航信息-->
-	        	        	
-		        <div class="r-area fr" id="jRightArea">
-	       
-	            <ul id="sidenav" class="side-nav clearfix">
-	                    <li id="productInfo" class="side-nav-item fl current" data-type="45">
-	                        <a href="javascript:void(0);">用户选择</a>
-	                    </li>
-	                <li style="_display: none;"><div class="tab_arrow" style="left: 0;"><b></b></div></li>
-	            </ul>
-	            <!--快捷查询信息显示区域-->
-	            <div id="navcontent" style="height: 462px;">
-
-					<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-					  <legend>请选择聊天用户</legend>
-					</fieldset> 
-					<div id="mySpace" style="">
-						<div class="space-weather clearfix">
-							<p>
-								 <select id="usersession" >
-							        <c:forEach  items="${allsession}"  var="user">
-							    		<c:if test="${pageContext.session.id!=user.account}">
-							    		  <option value="${user.account}">${user.account} ${user.platform}</option>  
-							    		</c:if>
-							    	</c:forEach> 
-							     </select>
-							</p>
-						</div>
+                 </div>
+       </div> 
+       <div class="u-search"> 
+        <a href="javascript:;" ></a> 
+        <input type="text" value="搜索最近联系人" > 
+       </div> 
+      </div> 
+      <div class="u-wrap" id="listDetails"> 
+       <ul class="u-lst">
+       	    <c:forEach  items="${allsession}"  var="user"  varStatus="count">
+	    		<c:if test="${pageContext.session.id!=user.account}">
+	    		  	<li  title="${user.account}" class="users no-msg  <c:if test="${count.index==0}">current</c:if>" > 
+			         	<a href="#">
+			         	   <span class="icon icon_1 off"><em class="em em_1"></em></span>
+			         	   <div class="category"><span>${user.account}</span><em style="display: none;"></em></div>
+			         	   <p class="tips"><span class="s02">16:30</span><i class="i01"></i><span class="s01">${user.platform}<img src="img/im/s21.gif"> </span> </p>
+			         	  </a>
+			         </li> 
+	    		</c:if>
+	    	</c:forEach>   
+       </ul> 
+      </div> 
+     </div> 
+     <div class="im-middle" id="im-middle" conver=""> 
+      <div class="im-header im-chat-t"> 
+       <div class="im-shop">
+        <a href="#" class="enter" style="display: none;"></a> 
+                  <h1><em class="em em_1"></em><span class="im-chat-object" id="logoTitle"></span><i class="shop-on"></i></h1> 
+                <p class="im-shop-des" id="logoDet"></p> 
+       </div> 
+       <div class="im-ads">
+       </div> 
+      </div> 
+      <div class="im-chat-window" style="margin-right: 340px;"> 
+       <!-- -- scrollDiv 消息渲染区域 -- --> 
+       <div class="im-chat-list" id="chatcontent"> 
+	        <div class="chat-more" id="clickMore">
+	         <p class=""><span class="icon"></span><span class="txt">点击加载更多</span></p>
+	        </div>
+			<div class="chat-txt chat-tips " logictype="chat_create"
+				data-rel="once-chat_create">
+				<div class="chat-msg i-success">
+					<i class="i-tips"></i>
+					<p class="cont">
+						您好，很高兴为您服务！
+					</p>
+					<div class="mask">
+						<span class="tl"></span><span class="tr"></span><span
+							class="bl"></span><span class="br"></span>
 					</div>
 				</div>
-            </div>
-    </div>
+			</div>
+			<div class="chat-txt text_line" time="2017-12-05 16:30:27">上次聊到这里</div>
+			 
+       </div> 
+       <div class="im-edit-area"> 
+        <div class="im-edit-toolbar"> 
+	         <p class="im-icon-out"> <a clstag="pageclick|keycount|w_web_201701061|24" href="javascript:;" class="rule" id="ruleBtn"> <i class="im-rule"></i></a><a clstag="pageclick|keycount|w_web_201701061|3" href="javascript:;" class="face" title="选择表情" id="expressionButton"><i class="im-face"></i></a> <a clstag="pageclick|keycount|w_web_201701061|4" href="javascript:;" class="pic" title="贴图" style="position: relative; z-index: 1;"> <i class="im-pic" id="sendImageButton"></i> <form method="POST" id="fileForm" name="fileForm" enctype="multipart/form-data"><input accept="image/*" type="file" name="upFile" id="upFile"></form></a> <a href="javascript:;" class="bell" title="震客服一下" id="actionVibrationButton"><i class="im-bell"></i></a> <a clstag="pageclick|keycount|w_web_201701061|5" href="javascript:;" class="star" id="degreeButton"> <i class="im-star"></i> <span class="im-txt">满意度评价</span> </a> </p> 
+	         <!-- 表情弹出层 --> 
+	         <div class="im-pop-face" id="j_popFace" style="display:none"><table class="im-table-face" cellspacing="0" cellpadding="0" type="classic" style="display: table;"><tbody><tr><td><span id="_aixin_" class="im-face-item-classic" style="background-position:0 0"></span></td><td><span id="_anwei_" class="im-face-item-classic" style="background-position:-38px 0"></span></td><td><span id="_bishi_" class="im-face-item-classic" style="background-position:-75px 0"></span></td><td><span id="_daku_" class="im-face-item-classic" style="background-position:-114px 0"></span></td><td><span id="_deyi_" class="im-face-item-classic" style="background-position:-152px 0"></span></td><td><span id="_dangao_" class="im-face-item-classic" style="background-position:-190px 0"></span></td><td><span id="_feiwen_" class="im-face-item-classic" style="background-position:-228px 0"></span></td><td><span id="_fennu_" class="im-face-item-classic" style="background-position:-266px 0"></span></td><td><span id="_guzhang_" class="im-face-item-classic" style="background-position:-304px 0"></span></td><td><span id="_guilian_" class="im-face-item-classic" style="background-position:-342px 0"></span></td><td><span id="_haixiu_" class="im-face-item-classic" style="background-position:-380px 0"></span></td><td><span id="_liuhan_" class="im-face-item-classic" style="background-position:-418px 0"></span></td></tr><tr><td><span id="_heixian_" class="im-face-item-classic" style="background-position:0 -37px"></span></td><td><span id="_aoman_" class="im-face-item-classic" style="background-position:-38px -37px"></span></td><td><span id="_jianxiao_" class="im-face-item-classic" style="background-position:-75px -37px"></span></td><td><span id="_jingya_" class="im-face-item-classic" style="background-position:-114px -37px"></span></td><td><span id="_kelian_" class="im-face-item-classic" style="background-position:-152px -37px"></span></td><td><span id="_kuku_" class="im-face-item-classic" style="background-position:-190px -37px"></span></td><td><span id="_liwu_" class="im-face-item-classic" style="background-position:-228px -37px"></span></td><td><span id="_hanxiao_" class="im-face-item-classic" style="background-position:-266px -37px"></span></td><td><span id="_huaduo_" class="im-face-item-classic" style="background-position:-304px -37px"></span></td><td><span id="_xiangwen_" class="im-face-item-classic" style="background-position:-342px -37px"></span></td><td><span id="_sese_" class="im-face-item-classic" style="background-position:-380px -37px"></span></td><td><span id="_shengbing_" class="im-face-item-classic" style="background-position:-418px -37px"></span></td></tr><tr><td><span id="_shuaiyang_" class="im-face-item-classic" style="background-position:0 -76px"></span></td><td><span id="_keshui_" class="im-face-item-classic" style="background-position:-38px -76px"></span></td><td><span id="_tanqi_" class="im-face-item-classic" style="background-position:-75px -76px"></span></td><td><span id="_touxiao_" class="im-face-item-classic" style="background-position:-114px -76px"></span></td><td><span id="_outu_" class="im-face-item-classic" style="background-position:-152px -76px"></span></td><td><span id="_tiaopi_" class="im-face-item-classic" style="background-position:-190px -76px"></span></td><td><span id="_weixiao_" class="im-face-item-classic" style="background-position:-228px -76px"></span></td><td><span id="_beishang_" class="im-face-item-classic" style="background-position:-266px -76px"></span></td><td><span id="_woshou_" class="im-face-item-classic" style="background-position:-304px -76px"></span></td><td><span id="_wenhao_" class="im-face-item-classic" style="background-position:-342px -76px"></span></td><td><span id="_yinxian_" class="im-face-item-classic" style="background-position:-380px -76px"></span></td><td><span id="_yongbao_" class="im-face-item-classic" style="background-position:-418px -76px"></span></td></tr><tr><td><span id="_xuanyun_" class="im-face-item-classic" style="background-position:0 -114px"></span></td><td><span id="_baibai_" class="im-face-item-classic" style="background-position:-38px -114px"></span></td><td><span id="_henbang_" class="im-face-item-classic" style="background-position:-75px -114px"></span></td><td><span id="_zhuakuang_" class="im-face-item-classic" style="background-position:-114px -114px"></span></td><td><span id="_baiyan_" class="im-face-item-classic" style="background-position:-152px -114px"></span></td><td><span id="_bizui_" class="im-face-item-classic" style="background-position:-190px -114px"></span></td><td><span id="_dabing_" class="im-face-item-classic" style="background-position:-228px -114px"></span></td><td><span id="_dengpao_" class="im-face-item-classic" style="background-position:-266px -114px"></span></td><td><span id="_dianhua_" class="im-face-item-classic" style="background-position:-304px -114px"></span></td><td><span id="_fadai_" class="im-face-item-classic" style="background-position:-342px -114px"></span></td><td><span id="_fankun_" class="im-face-item-classic" style="background-position:-380px -114px"></span></td><td><span id="_feiniao_" class="im-face-item-classic" style="background-position:-418px -114px"></span></td></tr><tr><td><span id="_fendou_" class="im-face-item-classic" style="background-position:0 -152px"></span></td><td><span id="_fengkuang_" class="im-face-item-classic" style="background-position:-38px -152px"></span></td><td><span id="_ganga_" class="im-face-item-classic" style="background-position:-75px -152px"></span></td><td><span id="_gaoxing_" class="im-face-item-classic" style="background-position:-114px -152px"></span></td><td><span id="_jida_" class="im-face-item-classic" style="background-position:-152px -152px"></span></td><td><span id="_jie_" class="im-face-item-classic" style="background-position:-190px -152px"></span></td><td><span id="_jingkong_" class="im-face-item-classic" style="background-position:-228px -152px"></span></td><td><span id="_kafei_" class="im-face-item-classic" style="background-position:-266px -152px"></span></td><td><span id="_keai_" class="im-face-item-classic" style="background-position:-304px -152px"></span></td><td><span id="_kele_" class="im-face-item-classic" style="background-position:-342px -152px"></span></td><td><span id="_kouzhao_" class="im-face-item-classic" style="background-position:-380px -152px"></span></td><td><span id="_kulou_" class="im-face-item-classic" style="background-position:-418px -152px"></span></td></tr><tr><td><span id="_liulei_" class="im-face-item-classic" style="background-position:0 -189px"></span></td><td><span id="_mifan_" class="im-face-item-classic" style="background-position:-38px -189px"></span></td><td><span id="_ningmeng_" class="im-face-item-classic" style="background-position:-75px -189px"></span></td><td><span id="_nuhuo_" class="im-face-item-classic" style="background-position:-114px -189px"></span></td><td><span id="_peizui_" class="im-face-item-classic" style="background-position:-152px -189px"></span></td><td><span id="_shengli_" class="im-face-item-classic" style="background-position:-190px -189px"></span></td><td><span id="_shijian_" class="im-face-item-classic" style="background-position:-228px -189px"></span></td><td><span id="_taiyang_" class="im-face-item-classic" style="background-position:-266px -189px"></span></td><td><span id="_zhouma_" class="im-face-item-classic" style="background-position:-304px -189px"></span></td><td><span id="_zhuzhu_" class="im-face-item-classic" style="background-position:-342px -189px"></span></td><td><span id="_zuqiu_" class="im-face-item-classic" style="background-position:-380px -189px"></span></td><td><span id="_zhenjing_" class="im-face-item-classic" style="background-position:-418px -189px"></span></td></tr></tbody></table><table class="im-table-face" cellspacing="0" cellpadding="0" type="dongdong" style="display: none;"><tbody><tr><td><span id="_b01_" class="im-face-item-dongdong" style="background-position:0 0"></span></td><td><span id="_b02_" class="im-face-item-dongdong" style="background-position:-76px 0"></span></td><td><span id="_b03_" class="im-face-item-dongdong" style="background-position:-156px 0"></span></td><td><span id="_b04_" class="im-face-item-dongdong" style="background-position:-235px 0"></span></td><td><span id="_b05_" class="im-face-item-dongdong" style="background-position:-313px 0"></span></td><td><span id="_b06_" class="im-face-item-dongdong" style="background-position:-393px -1px"></span></td></tr><tr><td><span id="_b07_" class="im-face-item-dongdong" style="background-position:0 -79px"></span></td><td><span id="_b08_" class="im-face-item-dongdong" style="background-position:-76px -79px"></span></td><td><span id="_b09_" class="im-face-item-dongdong" style="background-position:-156px -79px"></span></td><td><span id="_b10_" class="im-face-item-dongdong" style="background-position:-235px -79px"></span></td><td><span id="_b11_" class="im-face-item-dongdong" style="background-position:-313px -79px"></span></td><td><span id="_b12_" class="im-face-item-dongdong" style="background-position:-393px -79px"></span></td></tr><tr><td><span id="_b13_" class="im-face-item-dongdong" style="background-position:0 -160px"></span></td><td><span id="_b14_" class="im-face-item-dongdong" style="background-position:-76px -160px"></span></td><td><span id="_b15_" class="im-face-item-dongdong" style="background-position:-156px -160px"></span></td><td><span id="_b16_" class="im-face-item-dongdong" style="background-position:-235px -160px"></span></td></tr></tbody></table><div id="__view_div__" style="display:none;"></div><div class="im-face-tab"><a href="javascript:void(0)" class="im-face-switch-tab current" type="classic">经典</a><a href="javascript:void(0)" class="im-face-switch-tab" type="dongdong">咚咚</a></div></div> 
+	         <div class="im-pop-recommend j_recommend" style="display:none;"></div>
+	        <div class="im-pop-rule"><div class="sub"><div class="close"><a href="javascript:;"></a></div><p>将您已截好的图片直接粘贴至输入框中即可（说明：目前暂不支持IE浏览器）</p></div></div>
+        </div> 
+        <div class="im-edit-ipt-area"> 
+         <div id="text-in" class="im-edit-ipt" style="overflow-y: auto; font-weight: normal; font-size: 12px; overflow-x: hidden; word-break: break-all; font-style: normal; outline: none;" contenteditable="true" hidefocus="true" tabindex="0"></div> 
+        </div> 
+        <!--  <div class="im-edit-btn-area im-edit-btn-no"> --> 
+        <div class="im-edit-btn-area"> 
+         <div class="im-link-area"></div> 
+         <div class="im-btn-send-area" title="按Enter键发送,按Ctrl+Enter键换行"> 
+          <a href="javascript:;" class="im-btn im-btn-send"  id="winsend"> <span class="im-txt">发送</span> <span class="im-btn-l"></span> </a> 
+          <a href="javascript:;" class="im-btn im-btn-send-set" title="发送设置" id="change"> <i class="im-icon-arrow-down"></i> <span class="im-btn-r"></span> </a> 
+          <!-- 编辑发送浮层 --> 
+          <div class="im-pop-send-set cbut" style="position: absolute; top: 0; right: -250px;display:none;"> 
+           <ul class="im-send-set-list"> 
+            <!-- 当前高亮加class current --> 
+            <li class="im-item current" id="hotkey1"> <a href="javascript:;" class="im-item-content"> <i class="im-icon-right"></i> <span class="im-txt">按Enter键发送消息，Ctrl+Enter换行</span> </a> </li> 
+            <li class="im-item" id="hotkey2"> <a href="javascript:;" class="im-item-content"> <i class="im-icon-right"></i> <span class="im-txt">按Ctrl+Enter键发送消息，Enter换行</span> </a> </li> 
+           </ul> 
+          </div> 
+         </div> 
+         <a href="javascript:;" class="im-btn im-btn-close" id="talk_c"> <span class="im-txt">结束对话</span> <span class="im-btn-l"></span> <span class="im-btn-r"></span> </a> 
+         <div class="im-edit-tip" id="chat_count">
+          还可以输入
+          <span class="im-word-num">360</span>字
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+ 
+     
+    </div> 
+   </div> 
+  </div> 
 
+
+<div style="display:none"  class="usertemplate">
+	<li  title="{user}" class="users no-msg" > 
+     	<a href="#">
+     	   <span class="icon icon_1 off"><em class="em em_1"></em></span>
+     	   <div class="category"><span>{user}</span><em style="display: none;"></em></div>
+     	   <p class="tips"><span class="s02"></span><i class="i01"></i><span class="s01"><img src="img/im/s21.gif"> </span> </p>
+     	  </a>
+     </li> 
 </div>
 
-<div style="display:none"  class="mymsg">
-			<div class="customer_lists clearfix  "  >
-				<div class="header_img jimi3"
-					style="background: url(img/defaultImgLarge.png) no-repeat center;">
-					<div class="header_img_hover"></div>
+
+	<div style="display:none"  class="mymsg">
+			
+			<div class="chat-txt" >
+				<div class="chat-area customer">
+					<p class="name">{sender}</p>
+					<div class="dialog">
+						<i class="i_arr"></i><span class="e_tips"></span><span
+							class="err" id="err_1512462363000" style="display: none;"></span>
+					<table border="0" cellpadding="0" cellspacing="0">
+						<tbody>
+							<tr>
+								<td class="lt"></td>
+								<td class="tt"></td>
+								<td class="rt"></td>
+							</tr>
+							<tr>
+								<td class="lm"></td>
+								<td class="mm"><div class="cont">
+										<div>{content}</div>
+									</div></td>
+								<td class="rm"></td>
+							</tr>
+							<tr>
+								<td class="lb"></td>
+								<td class="bm"></td>
+								<td class="rb"></td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
-				<table class="msg" cellspacing="0" cellpadding="0">
-					<tbody>
-						<tr>
-							<td class="lt"></td>
-							<td class="tt"></td>
-							<td class="rt"></td>
-						</tr>
-						<tr>
-							<td class="lm"></td>
-							<td class="mm">{sender}<br>{content}</td>
-							<td class="rm"><span></span></td>
-						</tr>
-						<tr>
-							<td class="lb"></td>
-							<td class="bm"></td>
-							<td class="rb"></td>
-						</tr>
-						<tr>
-							<td></td>
-							<td class="time"></td>
-							<td></td>
-						</tr>
-					</tbody>
-				</table>
-			</div> 			
+			</div>
+		</div>
+	 			
 </div>
-<div style="display:none"  class="remsg">							
-							<div class="jimi_lists clearfix ">
-								<div class="header_img jimi3 fl"></div>
-								<table class="msg" cellspacing="0" cellpadding="0">
-									<tbody>
-										<tr>
-											<td class="lt"></td>
-											<td class="tt"></td>
-											<td class="rt"></td>
-										</tr>
-										<tr>
-											<td class="lm"><span></span></td>
-											<td class="mm">{sender}   {time}<br><span>{content}</span></td>
-											<td class="rm"></td>
-										</tr>
-										<tr>
-											<td class="lb"></td>
-											<td class="bm"></td>
-											<td class="rb"></td>
-										</tr>
-										<tr>
-											<td></td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
+<div style="display:none"  class="remsg">	
+       <div class="chat-txt chat-time" ><p class="time">{time}</p></div>
+		<div class="chat-txt"  >
+			<div class="chat-area service">
+				<p class="name">{sender}</p>
+				<div class="dialog">
+					<i class="i_arr"></i><span class="e_tips"></span>
+					<table border="0" cellpadding="0" cellspacing="0">
+						<tbody>
+							<tr>
+								<td class="lt"></td>
+								<td class="tt"></td>
+								<td class="rt"></td>
+							</tr>
+							<tr>
+								<td class="lm"></td>
+								<td class="mm"><div class="cont">
+										<div>{content}</div>
+									</div></td>
+								<td class="rm"></td>
+							</tr>
+							<tr>
+								<td class="lb"></td>
+								<td class="bm"></td>
+								<td class="rb"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div> 	 			 
 </div>
  
 <script src="layui/layui.js"></script>
-<script src="js/websocketconfig.js"></script>
+<script src="js/websocketconfig.js"></script>  
+
 <script>
+//https://static.360buyimg.com/im/w_web/img/classic/s02.gif
+   var currentsession= "${pageContext.session.id}";
+   var showmsg;
 	//一般直接写在一个js文件中
 	layui.use(['layer', 'jquery'], function(){
 	  var layer = layui.layer
 	  ,$ = layui.jquery;  
-	  var currentsession= "${pageContext.session.id}";
+	  var reUser =$("li.current").attr("title");
+	  $("#logoTitle").text(reUser);   
 	  //回复消息
 	  var reMsg=function(sender,time,msg){
 		  var content = $(".remsg").html();
@@ -254,7 +238,7 @@
       var sendMsg=function(reuser,msg){ 
     	  var message = new proto.Model(); 
       	  var content = new proto.MessageBody();
-           message.setMsgtype(4)
+           message.setMsgtype(4);
            message.setCmd(5);
            message.setToken(currentsession);  
            message.setSender(currentsession);
@@ -263,11 +247,6 @@
            content.setType(0)
            message.setContent(content.serializeBinary())
            socket.send(message.serializeBinary());
-           var ct = HtmlUtil.htmlEncodeByRegExp(msg);
-           var content = $(".mymsg").html();
-	    	   content  =content.replace("{content}",ct).replace("{sender}",currentsession)
-	        $("#chatcontent").append(content);
-	    	$("#chatcontent").scrollTop( $("#chatcontent")[0].scrollHeight); 
 	  }
 	  
  	 //拉取离线消息
@@ -289,6 +268,40 @@
  			  }
  		  }); 
       }
+ 	 
+      showmsg = function(data){
+    	  var msg = eval("("+data.user+")");
+	   	   var content = eval("("+data.content+")"); 
+	   	   if(msg.cmd==3){
+	   	    	  if(msg.sender!=currentsession){
+	   	    		layer.msg("用户"+msg.sender+"上线了");  
+		   	    	 var existsUser =  $("li[title='"+msg.sender+"']").html();
+	  	    		 if(existsUser == undefined){
+	  	    			var usertpl = $(".usertemplate").html();
+	  	    			usertpl  =usertpl.replace("{user}", msg.sender).replace("{user}",msg.sender);
+	  	    			$(".u-lst").append(usertpl);  
+	  	    		 }else{
+	  	    			$("li[title='"+msg.sender+"']").removeClass("off");
+	  	    		 }  
+	   	    		 
+	   	    	  } 
+	   	   }else if(msg.cmd==4){
+	    	       if(msg.sender!=currentsession){
+	     	    		layer.msg("用户"+msg.sender+"下线了");  
+	     	    		$("li[title='"+msg.sender+"']").addClass("off");
+	     	       }    
+	     	   }else if(msg.cmd==5){
+	   	    	   //显示非自身消息    
+	   	    	   if(msg.sender!=currentsession){
+	   	    		   //不显示用户组消息
+	   	    		   if(msg.groupId==null||msg.groupId.length<1){
+	       	    	     reMsg(msg.sender,msg.timeStamp,content.content);
+	   	    		   } 
+	   	    	   } 
+	   	   } 
+	   	 
+    	  
+      }
 	  
      var initEventHandle = function () {
     	 
@@ -306,14 +319,19 @@
               	       }else if(msg.getCmd()==3){
               	    	  if(msg.getSender()!=currentsession){
               	    		layer.msg("用户"+msg.getSender()+"上线了");  
-              	    		$("#usersession option[value='"+msg.getSender()+"']").remove(); 
-              	    		var option = $("<option>").val(msg.getSender()).text(msg.getSender()).attr("selected",true); 
-                  	    	$("#usersession").append(option);  
+              	    		 var existsUser =  $("li[title='"+msg.getSender()+"']").html();
+              	    		 if(existsUser == undefined){
+              	    			var usertpl = $(".usertemplate").html();
+              	    			usertpl  =usertpl.replace("{user}", msg.getSender()).replace("{user}",msg.getSender());
+              	    			$(".u-lst").append(usertpl);  
+              	    		 }else{
+              	    			$("li[title='"+msg.getSender()+"']").removeClass("off");
+              	    		 }  
               	    	  } 
               	       }else if(msg.getCmd()==4){
                	    	  if(msg.getSender()!=currentsession){
                 	    		layer.msg("用户"+msg.getSender()+"下线了");  
-                	    		$("#usersession option[value='"+msg.getSender()+"']").remove(); 
+                	    		$("li[title='"+msg.getSender()+"']").addClass("off");
                 	       }    
                 	   }else if(msg.getCmd()==5){
               	    	   //显示非自身消息    
@@ -351,44 +369,61 @@
             	  layer.confirm('您已下线，重新上线?', function(index){
             		  reconnect(websocketurl,initEventHandle); 
 	        		  layer.close(index);
-	        		  showOfflineMsg();
 	        	  }); 
     	      };
     	      socket.onerror = function () {
+    	    	  layer.msg("服务器连接出错，请检查websocketconfig.js里面的IP地址");  
     	          reconnect(websocketurl,initEventHandle);
-    	          showOfflineMsg();
-    	      };
-          
+    	      }; 
       }
 	  
 	  
       createWebSocket(websocketurl,initEventHandle);
       
+      
+      $(document).on("click",".users",function(){
+    	  reUser =  $(this).attr("title") 
+    	  $(".users").removeClass("current");
+    	  $(this).addClass("current");
+    	  $("#logoTitle").text(reUser);   
+      })
+      
      //发送消息
 	 $("#winsend").on("click",function(){
-		  if (!window.WebSocket) {
-	          return;
-	      }
-	      if (socket.readyState == WebSocket.OPEN) {
-	    	  var reUser = $("#usersession").val();
-	    	  if(reUser!=null&&reUser.length>0){
-	    		  var msg = $("#text-in").val();
-		    	  if(msg.length>0){
-		    		  sendMsg(reUser,msg)
-			    	  $("#text-in").val("")
-		    	  }else{
-		    		  layer.msg("请输入要发送的消息!");
-		    	  }
+		  var msg = $("#text-in").html();
+    	  if(reUser!=null&&reUser.length>0){
+	    	  if(msg.length>0){
+	    		  if (!window.WebSocket) {
+	    			  Imwebserver.sendMsg(reUser,msg);
+	    	      }else{
+	    	    	  if (socket.readyState == WebSocket.OPEN) {
+		    	    	  sendMsg(reUser,msg)
+		    	      } else {
+		    	          layer.msg("连接没有开启！");
+		    	      }	 
+	    	      }
+	    		  var ct = HtmlUtil.htmlEncodeByRegExp(msg);
+	              var content = $(".mymsg").html();
+	   	    	  content  =content.replace("{content}",ct).replace("{sender}",currentsession)
+	   	          $("#chatcontent").append(content);
+	   	    	  $("#chatcontent").scrollTop( $("#chatcontent")[0].scrollHeight); 
+	    	      $("#text-in").html("")
 	    	  }else{
-	    		  layer.msg("请选择要聊天的用户");
-	    	  } 
-	      } else {
-	          layer.msg("连接没有开启！");
-	      }
-		 
-	 }) 
-	  
+	    		  layer.msg("请输入要发送的消息!");
+	    	  }
+    	  }else{
+    		  layer.msg("请选择要聊天的用户");
+    	  }  
+    	  return false;
+	 })  
+	 
+	 
+	
  });
+ //dwr推送消息方法
+ function showMessage(data) {  
+	    showmsg(data); 
+ }  
 </script> 
 
  

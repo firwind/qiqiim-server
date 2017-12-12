@@ -8,6 +8,8 @@ package com.qiqiim.constant;
 
 import io.netty.util.AttributeKey;
 
+import com.googlecode.protobuf.format.JsonFormat;
+
 public class Constants {
 
 	public static interface WebSite{
@@ -46,6 +48,18 @@ public class Constants {
         public static final int WEBSOCKET = 1;//websocket标识
         
         public static final int SOCKET =0;//socket标识
+        
+        public static final int DWR = 2;//dwr标识
+        
+     
+    }
+    
+    public static interface DWRConfig{
+    	   public static final String DWR_SCRIPT_FUNCTIONNAME="showMessage";//dwr显示消息的script方法名
+    	   public static final String SS_KEY = "scriptSession_Id";  
+    	   public static final String BROWSER = "browser";  
+    	   public static final String BROWSER_VERSION = "browserVersion";  
+    	   public static final JsonFormat JSONFORMAT =new JsonFormat();
     }
     
     public static interface SessionConfig{

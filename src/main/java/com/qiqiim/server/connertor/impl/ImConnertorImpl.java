@@ -9,20 +9,26 @@ package com.qiqiim.server.connertor.impl;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSONArray;
 import com.qiqiim.constant.Constants;
 import com.qiqiim.server.connertor.ImConnertor;
 import com.qiqiim.server.exception.PushException;
 import com.qiqiim.server.group.ImChannelGroup;
 import com.qiqiim.server.model.MessageWrapper;
 import com.qiqiim.server.model.Session;
+import com.qiqiim.server.model.proto.MessageBodyProto;
+import com.qiqiim.server.model.proto.MessageProto;
 import com.qiqiim.server.proxy.MessageProxy;
 import com.qiqiim.server.session.impl.SessionManagerImpl;
+import com.qiqiim.webserver.dwrmanage.DwrUtil;
 
 public class ImConnertorImpl implements ImConnertor{
 	private final static Logger log = LoggerFactory.getLogger(ImConnertorImpl.class);
@@ -49,6 +55,7 @@ public class ImConnertorImpl implements ImConnertor{
 			throws RuntimeException {
 		  //这里判断群组ID 是否存在 并且该用户是否在群组内
 		  ImChannelGroup.broadcast(wrapper.getBody());
+		  DwrUtil.sedMessageToAll((MessageProto.Model)wrapper.getBody());
 		  proxy.saveOnlineMessageToDB(wrapper);
 	}
 

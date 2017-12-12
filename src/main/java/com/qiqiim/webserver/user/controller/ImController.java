@@ -20,11 +20,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.qiqiim.constant.Constants;
+import com.qiqiim.server.model.MessageWrapper;
+import com.qiqiim.server.model.proto.MessageBodyProto;
+import com.qiqiim.server.model.proto.MessageProto;
+import com.qiqiim.server.proxy.MessageProxy;
 import com.qiqiim.server.session.SessionManager;
 import com.qiqiim.webserver.base.controller.BaseController;
+import com.qiqiim.webserver.dwrmanage.DwrUtil;
+import com.qiqiim.webserver.dwrmanage.connertor.DwrConnertor;
 import com.qiqiim.webserver.sys.service.FilesInfoService;
 import com.qiqiim.webserver.user.model.ImFriendUserData;
 import com.qiqiim.webserver.user.model.ImFriendUserInfoData;
@@ -50,6 +55,10 @@ public class ImController extends BaseController{
 	private FilesInfoService filesInfoServiceImpl;
 	@Autowired
 	private UserMessageService userMessageServiceImpl;
+	@Autowired
+	private DwrConnertor dwrConnertorImpl;
+	@Autowired
+	private MessageProxy proxy;
 	
 	/**
 	 * 单聊
@@ -301,5 +310,29 @@ public class ImController extends BaseController{
 		request.setAttribute("pager", pager);
 		return "/historymessage";
 	} 
+	
+	
+	@RequestMapping(value = "/sendmsg", method = RequestMethod.GET)
+	@ResponseBody
+	public Object sendMsg(HttpServletResponse response,HttpServletRequest request,
+			RedirectAttributes redirectAttributes) throws Exception{
+		String sessionid = request.getSession().getId();
+		if(getLoginUser()!=null){
+			sessionid = getLoginUser().getId().toString();
+		}
+		MessageProto.Model.Builder builder = MessageProto.Model.newBuilder();
+        builder.setCmd(Constants.CmdType.MESSAGE);
+        builder.setSender(sessionid);
+        builder.setReceiver((String)request.getParameter("receiver"));
+        builder.setMsgtype(Constants.ProtobufType.REPLY);
+        MessageBodyProto.MessageBody.Builder  msg =  MessageBodyProto.MessageBody.newBuilder();
+        msg.setContent((String)request.getParameter("content")); 
+        builder.setContent(msg.build().toByteString());
+        MessageWrapper wrapper = proxy.convertToMessageWrapper(sessionid, builder.build());
+		dwrConnertorImpl.pushMessage(sessionid, wrapper);
+		return JSONArray.toJSON("");
+	} 
+	
+	 
 	
 }

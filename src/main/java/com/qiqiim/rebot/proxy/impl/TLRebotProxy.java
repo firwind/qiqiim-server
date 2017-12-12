@@ -76,8 +76,7 @@ public class TLRebotProxy implements RebotProxy {
 				 MessageBodyProto.MessageBody.Builder  msgbody =  MessageBodyProto.MessageBody.newBuilder();
 				 msgbody.setContent(message); 
 			     result.setContent(msgbody.build().toByteString());
-			     MessageProto.Model  newmsg = MessageProto.Model.parseFrom(result.build().toByteArray());
-			     return new MessageWrapper(MessageWrapper.MessageProtocol.REPLY, Constants.ImserverConfig.REBOT_SESSIONID, user,newmsg);
+			     return new MessageWrapper(MessageWrapper.MessageProtocol.REPLY, Constants.ImserverConfig.REBOT_SESSIONID, user,result.build());
 			}catch(Exception e){
 				e.printStackTrace();
 			}

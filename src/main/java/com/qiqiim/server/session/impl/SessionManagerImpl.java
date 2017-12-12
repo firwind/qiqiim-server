@@ -6,12 +6,15 @@
  */
 package com.qiqiim.server.session.impl;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.directwebremoting.ScriptSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +25,7 @@ import com.qiqiim.server.model.Session;
 import com.qiqiim.server.model.proto.MessageProto;
 import com.qiqiim.server.proxy.MessageProxy;
 import com.qiqiim.server.session.SessionManager;
+import com.qiqiim.webserver.dwrmanage.DwrUtil;
 
 public class SessionManagerImpl implements SessionManager {
 
@@ -42,9 +46,13 @@ public class SessionManagerImpl implements SessionManager {
             return;
         } 
         sessions.put(session.getAccount(), session);
-        ImChannelGroup.add(session.getSession());
+        if(session.getSource()!=Constants.ImserverConfig.DWR){
+        	ImChannelGroup.add(session.getSession());
+        }
         //全员发送上线消息
-        ImChannelGroup.broadcast(proxy.getOnLineStateMsg(session.getAccount()));
+        MessageProto.Model model = proxy.getOnLineStateMsg(session.getAccount());
+        ImChannelGroup.broadcast(model);
+        DwrUtil.sedMessageToAll(model);
         log.debug("put a session " + session.getAccount() + " to sessions!");
     }
 
@@ -63,7 +71,9 @@ public class SessionManagerImpl implements SessionManager {
     		if(session!=null){
     			session.closeAll();
 				sessions.remove(sessionId);
-				ImChannelGroup.broadcast(proxy.getOffLineStateMsg(sessionId));
+				MessageProto.Model model = proxy.getOffLineStateMsg(sessionId);
+				ImChannelGroup.broadcast(model);
+				DwrUtil.sedMessageToAll(model);
     		}  
     	}catch(Exception e){
     		
@@ -76,17 +86,23 @@ public class SessionManagerImpl implements SessionManager {
     	try{
     		Session session = getSession(sessionId);
     		if(session!=null){
-    			if(session.getSource()==Constants.ImserverConfig.WEBSOCKET){
+    			int source = session.getSource();
+    			if(source==Constants.ImserverConfig.WEBSOCKET || source==Constants.ImserverConfig.DWR){
     				session.close(nid);
     				//判断没有其它session后 从SessionManager里面移除
     				if(session.otherSessionSize()<1){
     					sessions.remove(sessionId);
-    					ImChannelGroup.broadcast(proxy.getOffLineStateMsg(sessionId));
+    					MessageProto.Model model = proxy.getOffLineStateMsg(sessionId);
+    					ImChannelGroup.broadcast(model);
+    					DwrUtil.sedMessageToAll(model);
+    					//dwr全员消息广播
     				} 
-    			}else{
+    			} else{
     				session.close();
     				sessions.remove(sessionId);
-    				ImChannelGroup.broadcast(proxy.getOffLineStateMsg(sessionId));
+    				MessageProto.Model model = proxy.getOffLineStateMsg(sessionId);
+    				ImChannelGroup.broadcast(model);
+    				DwrUtil.sedMessageToAll(model);
     			}
     		}  
     	}catch(Exception e){
@@ -122,12 +138,12 @@ public class SessionManagerImpl implements SessionManager {
         if (session != null) {
         	log.info("session " + sessionId + " exist!");
         	//当链接来源不是同一来源或者 是socket链接，踢掉已经登录的session 
-        	if(session.getSource()!=wrapper.getSource() || session.getSource()==Constants.ImserverConfig.SOCKET){
+        	if(session.getSource()==Constants.ImserverConfig.SOCKET){
         		// 如果session已经存在则销毁session
                 //从广播组清除
         		log.info("sessionId" + session.getNid() +"------------------"+ ctx.channel().id().asShortText()+ "      !");
                 ImChannelGroup.remove(session.getSession());
-                //session.close();
+                session.close(session.getNid());
                 sessions.remove(session.getAccount());
                 log.info("session " + sessionId + " have been closed!");
         	}else if(session.getSource()==Constants.ImserverConfig.WEBSOCKET){
@@ -138,14 +154,58 @@ public class SessionManagerImpl implements SessionManager {
         		ImChannelGroup.add(newsession.getSession());
                 log.info("session " + sessionId + " update!");
         		return newsession;
-        	}  
+        	}else if(session.getSource()==Constants.ImserverConfig.DWR){
+        		//清除dwr session
+        		log.info("sessionId ----" + session.getAccount() +" start remove !");
+        		session.closeAll();
+                sessions.remove(session.getAccount());
+                log.info("session " + sessionId + " have been closed!");
+        	}   
         }
        
         session = setSessionContent(ctx,wrapper,sessionId);
         addSession(session);
-      
         return session;
     }
+    
+    
+	@Override
+	public Session createSession(ScriptSession scriptSession, String sessionid) {
+		  
+		 Session dwrsession = new Session(scriptSession);
+		 dwrsession.setAccount(sessionid);
+		 dwrsession.setSource(Constants.ImserverConfig.DWR);
+         dwrsession.setPlatform((String)scriptSession.getAttribute(Constants.DWRConfig.BROWSER));
+         dwrsession.setPlatformVersion((String)scriptSession.getAttribute(Constants.DWRConfig.BROWSER_VERSION));
+		 dwrsession.setBindTime(System.currentTimeMillis());
+		 dwrsession.setUpdateTime(System.currentTimeMillis());
+		 Session session = sessions.get(sessionid);
+         if (session != null) {
+        	 log.info("session " + sessionid + " exist!");
+    		 if(session.getSource()!=Constants.ImserverConfig.DWR){
+    			//从广播组清除
+         		 log.info("sessionId ----" + session.getAccount() +" start remove !");
+                 ImChannelGroup.remove(session.getSession());
+                 List<Channel> channels = session.getSessionAll();
+                 if(channels!=null&&channels.size()>0){
+                	 for(Channel cl:channels){
+                		 ImChannelGroup.remove(cl);
+                	 } 
+                 }
+                 //session.close();
+                 sessions.remove(session.getAccount());
+                 log.info("session " + sessionid + " have been closed!");
+    		 }else if(session.getSource()==Constants.ImserverConfig.DWR){
+         		session.addSessions(dwrsession);
+         		updateSession(session);
+                log.info("session " + sessionid + " update!");
+         		return dwrsession;
+    		 } 
+         }
+        addSession(dwrsession);
+		return dwrsession;
+	}
+
     
     /**
      * 设置session内容
@@ -178,6 +238,7 @@ public class SessionManagerImpl implements SessionManager {
         Session session = getSession(sessionId);
         return session != null ? true : false;
 	}
+
 
 
     
