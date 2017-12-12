@@ -27,6 +27,7 @@ QQ群：532696201
  **项目运行图** 
 
 ![首页](https://gitee.com/uploads/images/2017/1129/135448_76529268_1644780.png "QQ图片20171129135331.png")
+![单聊](https://gitee.com/uploads/images/2017/1212/172531_4921fcf5_1644780.png "单聊.png")
 ![单聊](https://gitee.com/uploads/images/2017/1124/131757_0d40833f_1644780.png "图片2.png")
 ![群聊](https://gitee.com/uploads/images/2017/1124/131808_e55369c4_1644780.png "图片3.png")
 ![机器人](https://gitee.com/uploads/images/2017/1124/131822_f8984f96_1644780.png "图片4.png")
