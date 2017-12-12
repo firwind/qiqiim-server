@@ -4,7 +4,9 @@ QIQIIM 提供简单快捷的IM方案，快速打造在线IM，可用于公司内
 
 数据库  mysql
 
-Java后端和js消息采用Google Protobuf传输
+开发环境 eclipse  tomcat7   jdk1.7
+
+Java后端和js消息统一采用Google Protobuf传输
 
 项目可以直接生成后台代码、页面及js文件，大大节省开发时间
 
