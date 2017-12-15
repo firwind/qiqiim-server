@@ -4,7 +4,7 @@
   <groupId>com.qiqiim</groupId>
   <artifactId>qiqiim-server</artifactId>
   <packaging>war</packaging>
-  <version>0.3</version>
+  <version>0.4.1</version>
   <name>qiqiim-server dev Webapp</name>
   <url>http://maven.apache.org</url>
  <properties>
