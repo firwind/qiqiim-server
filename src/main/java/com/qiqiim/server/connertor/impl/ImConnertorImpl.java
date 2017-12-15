@@ -9,22 +9,18 @@ package com.qiqiim.server.connertor.impl;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alibaba.fastjson.JSONArray;
 import com.qiqiim.constant.Constants;
 import com.qiqiim.server.connertor.ImConnertor;
 import com.qiqiim.server.exception.PushException;
 import com.qiqiim.server.group.ImChannelGroup;
 import com.qiqiim.server.model.MessageWrapper;
 import com.qiqiim.server.model.Session;
-import com.qiqiim.server.model.proto.MessageBodyProto;
 import com.qiqiim.server.model.proto.MessageProto;
 import com.qiqiim.server.proxy.MessageProxy;
 import com.qiqiim.server.session.impl.SessionManagerImpl;
@@ -96,7 +92,7 @@ public class ImConnertorImpl implements ImConnertor{
 	   try {
 	    	///取得接收人 给接收人写入消息
 	    	Session responseSession = sessionManager.getSession(wrapper.getReSessionId());
-	  		if (responseSession != null ) {
+	  		if (responseSession != null && responseSession.isConnected() ) {
 	  			responseSession.write(wrapper.getBody());
 	  			proxy.saveOnlineMessageToDB(wrapper);
 	  			return;

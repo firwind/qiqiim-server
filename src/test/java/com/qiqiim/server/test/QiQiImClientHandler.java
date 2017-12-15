@@ -57,9 +57,11 @@ public class QiQiImClientHandler extends ChannelInboundHandlerAdapter {
         if(message.getCmd()==Constants.CmdType.HEARTBEAT){
         	ctx.channel().writeAndFlush(MessageData.generateHeartbeat());
         	System.out.println("------------心跳检测--------------"+message);
-        }if(message.getCmd()==Constants.CmdType.ONLINE){
+        }else if(message.getCmd()==Constants.CmdType.ONLINE){
         	System.out.println(message.getSender()+"------------上线了--------------");
-        }else{
+        }else if(message.getCmd()==Constants.CmdType.OFFLINE){
+        	System.out.println(message.getSender()+"------------下线了--------------");
+        }else if(message.getCmd()==Constants.CmdType.MESSAGE){
         	 MessageBodyProto.MessageBody  content =  MessageBody.parseFrom(message.getContent()) ;
              logger.info(message.getSender()+" 回复我 :" + content.getContent());
              System.out.println(message.getSender()+" 回复我 :" + content.getContent());

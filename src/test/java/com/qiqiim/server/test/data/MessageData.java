@@ -33,6 +33,7 @@ public class MessageData {
     public static MessageProto.Model.Builder generateHeartbeat() {
         MessageProto.Model.Builder builder = MessageProto.Model.newBuilder();
         builder.setCmd(Constants.CmdType.HEARTBEAT);
+        builder.setMsgtype(Constants.ProtobufType.REPLY);
         return builder;
     }
     

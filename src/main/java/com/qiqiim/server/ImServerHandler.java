@@ -54,11 +54,12 @@ public class ImServerHandler  extends ChannelInboundHandlerAdapter{
 	    if ( o instanceof IdleStateEvent && ((IdleStateEvent) o).state().equals(IdleState.READER_IDLE)){
 			log.debug(IdleState.READER_IDLE +"... from "+ctx.channel().remoteAddress()+" nid:" +ctx.channel().id().asShortText());
 	    	Long lastTime = (Long) ctx.channel().attr(Constants.SessionConfig.SERVER_SESSION_HEARBEAT).get();
+	    	Long currentTime = System.currentTimeMillis();
 	    	
-	     	if(lastTime != null && System.currentTimeMillis() - lastTime >= Constants.ImserverConfig.PING_TIME_OUT)
+	    	if(lastTime != null && (currentTime - lastTime)/1000 >= Constants.ImserverConfig.PING_TIME_OUT)
 	     	{
+	    		String sessionId = connertor.getChannelSessionId(ctx);
 	     		connertor.close(ctx);
-	     		//ctx.channel().close();
 	     	}
 	     	ctx.channel().attr(Constants.SessionConfig.SERVER_SESSION_HEARBEAT).set(null);
 	    }
