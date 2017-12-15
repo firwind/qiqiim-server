@@ -15,6 +15,7 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.timeout.IdleStateHandler;
 
 import java.util.Scanner;
+import java.util.UUID;
 
 import com.qiqiim.constant.Constants;
 import com.qiqiim.server.model.proto.MessageProto;
@@ -71,7 +72,8 @@ public class QiQiImClient {
 
     public static void main(String[] args) throws Exception {
     	 try {
-    		 String currentuser = "abc";
+    		 //String currentuser = "abc";
+    		 String currentuser = UUID.randomUUID().toString().replaceAll("-", "");
     		 //链接socket服务
              QiQiImClient.connect(MessageData.generateConnect(currentuser));
              Scanner sc = new Scanner(System.in); 

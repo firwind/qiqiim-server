@@ -54,10 +54,10 @@ public class SessionManagerImpl implements SessionManager {
         ImChannelGroup.broadcast(model);
         DwrUtil.sedMessageToAll(model);
         log.debug("put a session " + session.getAccount() + " to sessions!");
+        log.debug("session size " + sessions.size() );
     }
 
     public synchronized void updateSession(Session session) {
-        //session.setLastAccessedTime(System.currentTimeMillis());
         session.setUpdateTime(System.currentTimeMillis());
         sessions.put(session.getAccount(), session);
     }
@@ -78,6 +78,7 @@ public class SessionManagerImpl implements SessionManager {
     	}catch(Exception e){
     		
     	} 
+    	log.debug("session size " + sessions.size() );
     	log.info("system remove the session " + sessionId + " from sessions!");
     } 
     
@@ -94,8 +95,8 @@ public class SessionManagerImpl implements SessionManager {
     					sessions.remove(sessionId);
     					MessageProto.Model model = proxy.getOffLineStateMsg(sessionId);
     					ImChannelGroup.broadcast(model);
-    					DwrUtil.sedMessageToAll(model);
     					//dwr全员消息广播
+    					DwrUtil.sedMessageToAll(model);
     				} 
     			} else{
     				session.close();
@@ -230,25 +231,13 @@ public class SessionManagerImpl implements SessionManager {
           log.info("create new session " + sessionId + " successful!");
           return session;
     }
-    
-    
+     
 
 	@Override
 	public boolean exist(String sessionId) {
         Session session = getSession(sessionId);
         return session != null ? true : false;
 	}
-
-
-
-    
-
-
-  /*  protected Connection createTcpConnection(Session session, ChannelHandlerContext ctx) {
-        Connection conn = new TcpConnection(ctx);
-        conn.setConnectionId(session.getSessionId());
-        conn.setSession(session);
-        return conn;
-    }*/
+ 
 
 }

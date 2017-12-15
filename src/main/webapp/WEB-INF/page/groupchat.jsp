@@ -300,6 +300,7 @@
           	    	   //发送心跳回应
           	    	   var message1 = new proto.Model();
                        message1.setCmd(1);
+                       message1.setMsgtype(4);
                        socket.send(message1.serializeBinary());
           	       }else if(msg.getCmd()==3){
            	    	  if(msg.getSender()!=currentsession){

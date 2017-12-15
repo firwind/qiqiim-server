@@ -8,6 +8,7 @@ package com.qiqiim.server;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 
@@ -21,7 +22,7 @@ import com.qiqiim.server.model.MessageWrapper;
 import com.qiqiim.server.model.proto.MessageProto;
 import com.qiqiim.server.proxy.MessageProxy;
 import com.qiqiim.util.ImUtils;
-
+@Sharable
 public class ImWebSocketServerHandler   extends SimpleChannelInboundHandler<MessageProto.Model>{
 
 	private final static Logger log = LoggerFactory.getLogger(ImWebSocketServerHandler.class);
@@ -51,9 +52,8 @@ public class ImWebSocketServerHandler   extends SimpleChannelInboundHandler<Mess
 	    //如果心跳请求发出30秒内没收到响应，则关闭连接
 	    if ( o instanceof IdleStateEvent && ((IdleStateEvent) o).state().equals(IdleState.READER_IDLE)){
 			log.debug(IdleState.READER_IDLE +"... from "+ctx.channel().remoteAddress()+" nid:" +ctx.channel().id().asShortText());
-	    	Long lastTime = (Long) ctx.channel().attr(Constants.SessionConfig.SERVER_SESSION_HEARBEAT).get();
-	    	
-	     	if(lastTime != null && System.currentTimeMillis() - lastTime >= Constants.ImserverConfig.PING_TIME_OUT)
+			Long lastTime = (Long) ctx.channel().attr(Constants.SessionConfig.SERVER_SESSION_HEARBEAT).get();
+	     	if(lastTime != null && (System.currentTimeMillis() - lastTime)/1000 >= Constants.ImserverConfig.PING_TIME_OUT)
 	     	{
 	     		connertor.close(ctx);
 	     	}

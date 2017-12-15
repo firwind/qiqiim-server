@@ -1,21 +1,42 @@
+### 简介
+
+
 QIQIIM 提供简单快捷的IM方案，快速打造在线IM，可用于公司内网、外网通讯，客服系统等，实现了socket,websocket，能和安卓、IOS应用结合使用，可用于任何商业、个人作品中，请保留作者信息，如果项目帮到了您请加个星，文档简陋，后续会不断完善，如有不明白的可以加群
 
 项目使用springmvc mybatis netty4
 
 数据库  mysql
 
-Java后端和js消息采用Google Protobuf传输
+开发环境 eclipse  tomcat7   jdk1.7
+
+Java后端和js消息统一采用Google Protobuf传输
 
 项目可以直接生成后台代码、页面及js文件，大大节省开发时间
 
 目前实现了单聊、群聊、机器人回复、上下线提醒、离线消息拉取、聊天记录、断线重连等功能，项目已经结合Mysql数据库，聊天的信息会保存到数据库表中，已经跟layim结合完成，如果有更好的需求或想法可以联系我 
 
+###  :question:  **SQL文件找不到、protobuf文件怎么生成，手机访问连接不上的问题，请先查看项目webapp下的help.doc文档** 
+
+
+![输入图片说明](https://gitee.com/uploads/images/2017/1212/180526_2b8c7f29_1644780.png "1513073046197.png")
 QQ群：532696201
 
+###  更新日志
 
- **项目运行图** 
+
+  **版本号v0.4** 
+ - 兼容ie6以上浏览器，使用dwr推送解决websocket在低版本ie下不能访问的问题
+ - 更新单聊界面
+ - 修复一些小BUG
+ - 更新idea下编译找不到xml的问题
+ 
+
+
+###  **项目运行图** 
+
 
 ![首页](https://gitee.com/uploads/images/2017/1129/135448_76529268_1644780.png "QQ图片20171129135331.png")
+![单聊](https://gitee.com/uploads/images/2017/1212/172531_4921fcf5_1644780.png "单聊.png")
 ![单聊](https://gitee.com/uploads/images/2017/1124/131757_0d40833f_1644780.png "图片2.png")
 ![群聊](https://gitee.com/uploads/images/2017/1124/131808_e55369c4_1644780.png "图片3.png")
 ![机器人](https://gitee.com/uploads/images/2017/1124/131822_f8984f96_1644780.png "图片4.png")
