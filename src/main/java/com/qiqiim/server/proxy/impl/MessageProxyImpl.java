@@ -20,6 +20,7 @@ import com.qiqiim.server.connertor.impl.ImConnertorImpl;
 import com.qiqiim.server.model.MessageWrapper;
 import com.qiqiim.server.model.proto.MessageBodyProto;
 import com.qiqiim.server.model.proto.MessageProto;
+import com.qiqiim.server.model.proto.MessageProto.Model;
 import com.qiqiim.server.proxy.MessageProxy;
 import com.qiqiim.webserver.user.model.UserMessageEntity;
 import com.qiqiim.webserver.user.service.UserMessageService;
@@ -37,10 +38,6 @@ public class MessageProxyImpl implements MessageProxy {
         switch (message.getCmd()) {
 			case Constants.CmdType.BIND:
 				 try {
-					 MessageProto.Model person2 = MessageProto.Model.parseFrom(message.toByteArray());
-					 person2.getContent();
-					 
-					 
 		            	return new MessageWrapper(MessageWrapper.MessageProtocol.CONNECT, message.getSender(), null,message);
 		            } catch (Exception e) {
 		                e.printStackTrace();
@@ -165,6 +162,17 @@ public class MessageProxyImpl implements MessageProxy {
 		result.setSender(sessionId);//存入发送人sessionId
 		result.setCmd(Constants.CmdType.OFFLINE);
 		return result.build();
+	}
+
+
+
+	@Override
+	public MessageWrapper getReConnectionStateMsg(String sessionId) {
+		 MessageProto.Model.Builder  result = MessageProto.Model.newBuilder();
+		 result.setTimeStamp(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+		 result.setSender(sessionId);//存入发送人sessionId
+		 result.setCmd(Constants.CmdType.RECON);
+		 return  new MessageWrapper(MessageWrapper.MessageProtocol.SEND, sessionId, null,result.build());
 	}
 
 

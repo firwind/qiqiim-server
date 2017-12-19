@@ -168,12 +168,13 @@ public class ImConnertorImpl implements ImConnertor{
         try {
         	  String sessionId = wrapper.getSessionId();
         	  String sessionId0 = getChannelSessionId(ctx);
-              if (sessionId.equals(sessionId0)) {
+        	  //当sessionID存在或者相等  视为同一用户重新连接
+              if (StringUtils.isNotEmpty(sessionId0) || sessionId.equals(sessionId0)) {
                   log.info("connector reconnect sessionId -> " + sessionId + ", ctx -> " + ctx.toString());
-                  pushMessage(wrapper);
+                  pushMessage(proxy.getReConnectionStateMsg(sessionId0));
               } else {
                   log.info("connector connect sessionId -> " + sessionId + ", sessionId0 -> " + sessionId0 + ", ctx -> " + ctx.toString());
-                  Session session = sessionManager.createSession(wrapper, ctx);
+                  sessionManager.createSession(wrapper, ctx);
                   setChannelSessionId(ctx, sessionId);
                   log.info("create channel attr sessionId " + sessionId + " successful, ctx -> " + ctx.toString());
               }

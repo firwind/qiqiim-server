@@ -81,6 +81,7 @@ public class Constants {
 	   	 byte ONLINE = 3; //上线
 	   	 byte OFFLINE = 4; //下线 
 	   	 byte MESSAGE = 5; //消息
+	   	 byte RECON = 6; //重连
 	}
   
 }

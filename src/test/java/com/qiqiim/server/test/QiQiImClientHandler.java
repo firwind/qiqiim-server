@@ -59,6 +59,8 @@ public class QiQiImClientHandler extends ChannelInboundHandlerAdapter {
         	System.out.println("------------心跳检测--------------"+message);
         }else if(message.getCmd()==Constants.CmdType.ONLINE){
         	System.out.println(message.getSender()+"------------上线了--------------");
+        }else if(message.getCmd()==Constants.CmdType.RECON){
+        	System.out.println(message.getSender()+"------------重新连接--------------");
         }else if(message.getCmd()==Constants.CmdType.OFFLINE){
         	System.out.println(message.getSender()+"------------下线了--------------");
         }else if(message.getCmd()==Constants.CmdType.MESSAGE){

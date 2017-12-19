@@ -30,6 +30,13 @@ public interface MessageProxy {
      */
     MessageProto.Model  getOnLineStateMsg(String sessionId);
     /**
+     * 重连状态消息
+     * @param sessionId
+     * @return
+     */
+    MessageWrapper  getReConnectionStateMsg(String sessionId);
+    
+    /**
      * 获取下线状态消息
      * @param sessionId
      * @return
