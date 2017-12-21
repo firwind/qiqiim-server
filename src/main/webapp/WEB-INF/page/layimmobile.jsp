@@ -260,6 +260,7 @@ layui.use(['jquery','mobile' ], function(){
           	       } else{
           	    	   //显示非自身消息    
           	    	   if(msg.getSender()!=currentsession){
+          	    		  var time = (new Date(msg.getTimestamp())).getTime(); 
           	    		   //不显示用户组消息
           	    		   if(msg.getGroupid()==null||msg.getGroupid().length<1){
       	    				    lm.getMessage({
@@ -268,7 +269,7 @@ layui.use(['jquery','mobile' ], function(){
 						 	        ,id: msg.getSender()
 						 	        ,type: "friend"
 						 	        ,content: msgCon.getContent()
-						 	        ,timestamp: msg.getTimestamp()
+						 	        ,timestamp:time
 					 	     	});   
           	    		   }else{
           	    			    lm.getMessage({
@@ -277,7 +278,7 @@ layui.use(['jquery','mobile' ], function(){
 						 	        ,id: msg.getGroupid()
 						 	        ,type: "group"
 						 	        ,content: msgCon.getContent()
-						 	        ,timestamp: msg.getTimestamp()
+						 	        ,timestamp: time
 					 	     	});  
           	    		   } 
           	    	   }  

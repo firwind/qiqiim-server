@@ -98,6 +98,7 @@
 	     	}else if(msg.cmd==5){
 	   	    	   //显示非自身消息    
       	    	   if(msg.sender!=currentsession){
+      	    		  var time = (new Date(msg.timeStamp)).getTime(); 
       	    		   //不显示用户组消息
       	    		   if(msg.groupId==null||msg.groupId.length<1){
   	    				    lm.getMessage({
@@ -106,7 +107,7 @@
 					 	        ,id: msg.sender
 					 	        ,type: "friend"
 					 	        ,content: content.content
-					 	        ,timestamp:msg.timeStamp 
+					 	        ,timestamp:time
 				 	     	});   
       	    		   }else{
       	    			    lm.getMessage({
@@ -115,7 +116,7 @@
 					 	        ,id: msg.groupId
 					 	        ,type: "group"
 					 	        ,content: content.content
-					 	        ,timestamp: msg.timeStamp
+					 	        ,timestamp: time
 				 	     	});  
       	    		   } 
       	    	  }  
@@ -269,6 +270,8 @@
 	          	    	   //显示非自身消息    
 	          	    	   if(msg.getSender()!=currentsession){
 	          	    		   //不显示用户组消息
+	          	    		   
+	          	    		   var time = (new Date(msg.getTimestamp())).getTime(); 
 	          	    		   if(msg.getGroupid()==null||msg.getGroupid().length<1){
           	    				    lm.getMessage({
 							 	        username: username
@@ -276,7 +279,7 @@
 							 	        ,id: msg.getSender()
 							 	        ,type: "friend"
 							 	        ,content: msgCon.getContent()
-							 	        ,timestamp: msg.getTimestamp()
+							 	        ,timestamp: time
 						 	     	});   
 	          	    		   }else{
 	          	    			    lm.getMessage({
@@ -285,7 +288,7 @@
 							 	        ,id: msg.getGroupid()
 							 	        ,type: "group"
 							 	        ,content: msgCon.getContent()
-							 	        ,timestamp: msg.getTimestamp()
+							 	        ,timestamp: time
 						 	     	});  
 	          	    		   } 
 	          	    	   }  
