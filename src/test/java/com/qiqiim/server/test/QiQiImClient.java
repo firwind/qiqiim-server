@@ -23,16 +23,16 @@ import com.qiqiim.server.test.data.MessageData;
 
 public class QiQiImClient {
 
-    public static String host = "127.0.0.1";
-    public static int port = 2000;
+    public  String host = "127.0.0.1";
+    public  int port = 2000;
  
-    public static Bootstrap bootstrap = getBootstrap();
-    public static Channel channel = getChannel(host, port);
+    public  Bootstrap bootstrap = getBootstrap();
+    public  Channel channel = getChannel(host, port);
 
     /**
      * Init Bootstrap
      */
-    public static final Bootstrap getBootstrap() {
+    public   Bootstrap getBootstrap() {
         EventLoopGroup group = new NioEventLoopGroup();
         Bootstrap b = new Bootstrap();
         b.group(group);
@@ -52,7 +52,7 @@ public class QiQiImClient {
         return b;
     }
 
-    public static final Channel getChannel(String host, int port) {
+    public   Channel getChannel(String host, int port) {
         Channel channel;
         try {
             channel = bootstrap.connect(host, port).sync().channel();
@@ -63,7 +63,7 @@ public class QiQiImClient {
         return channel;
     }
 
-    public static void connect(Object msg) throws Exception {
+    public  void connect(Object msg) throws Exception {
         if (channel != null) {
             channel.writeAndFlush(msg).sync();
         }
@@ -75,7 +75,7 @@ public class QiQiImClient {
     		 //String currentuser = "abc";
     		 String currentuser = UUID.randomUUID().toString().replaceAll("-", "");
     		 //链接socket服务
-             QiQiImClient.connect(MessageData.generateConnect(currentuser));
+             new QiQiImClient().connect(new MessageData().generateConnect(currentuser));
              Scanner sc = new Scanner(System.in); 
         	 System.out.println("输入聊天用户SessionId：");
         	 String reuser=sc.next();
@@ -83,7 +83,7 @@ public class QiQiImClient {
         	 sc.nextLine(); 
              while (true) { 
                      String line = sc.nextLine(); 
-                     QiQiImClient.connect(MessageData.generateSend(currentuser, reuser,line));
+                     new QiQiImClient().connect(new MessageData().generateSend(currentuser, reuser,line));
                      if (line.equals("exit")) break; 
              } 
         	

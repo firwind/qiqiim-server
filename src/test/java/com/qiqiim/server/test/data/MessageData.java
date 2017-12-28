@@ -11,7 +11,7 @@ import com.qiqiim.util.SystemInfo;
 
 public class MessageData {
 
-    public static MessageProto.Model.Builder generateConnect(String sessionid) {
+    public  MessageProto.Model.Builder generateConnect(String sessionid) {
     	SystemInfo syso = SystemInfo.getInstance();
         MessageProto.Model.Builder builder = MessageProto.Model.newBuilder();
         builder.setVersion("1.0");
@@ -30,14 +30,14 @@ public class MessageData {
         return builder;
     }
 
-    public static MessageProto.Model.Builder generateHeartbeat() {
+    public  MessageProto.Model.Builder generateHeartbeat() {
         MessageProto.Model.Builder builder = MessageProto.Model.newBuilder();
         builder.setCmd(Constants.CmdType.HEARTBEAT);
         builder.setMsgtype(Constants.ProtobufType.REPLY);
         return builder;
     }
     
-    public static MessageProto.Model.Builder generateSend(String sessionid,String ressionId,String sendcontent) {
+    public  MessageProto.Model.Builder generateSend(String sessionid,String ressionId,String sendcontent) {
         MessageProto.Model.Builder builder = MessageProto.Model.newBuilder();
         builder.setCmd(Constants.CmdType.MESSAGE);
         builder.setSender(sessionid);

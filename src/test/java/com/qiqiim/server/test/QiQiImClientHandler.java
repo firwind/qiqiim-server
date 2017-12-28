@@ -53,9 +53,9 @@ public class QiQiImClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object o) throws Exception {
         MessageProto.Model message = (MessageProto.Model) o;
-       
+        
         if(message.getCmd()==Constants.CmdType.HEARTBEAT){
-        	ctx.channel().writeAndFlush(MessageData.generateHeartbeat());
+        	ctx.channel().writeAndFlush(new MessageData().generateHeartbeat());
         	System.out.println("------------心跳检测--------------"+message);
         }else if(message.getCmd()==Constants.CmdType.ONLINE){
         	System.out.println(message.getSender()+"------------上线了--------------");
