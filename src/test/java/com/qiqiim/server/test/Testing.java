@@ -49,7 +49,7 @@ public class Testing {
             Runnable run = new Runnable() {
                 public void run() {
                     try {
-                        // 获取许可
+                        // 获取许可 
                         semp.acquire();
                         System.out.println("Thread并发数>>"+ NO);
                         try {
