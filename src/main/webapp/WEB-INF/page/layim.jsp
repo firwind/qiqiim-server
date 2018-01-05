@@ -312,6 +312,7 @@
 		   	       message.setToken(currentsession);
 		   	       var bytes = message.serializeBinary();  
 	               socket.send(bytes);  
+	               layim.setFriendStatus(currentsession, 'online');
 	          };
 	          //连接关闭
 	          socket.onclose = function(event) {

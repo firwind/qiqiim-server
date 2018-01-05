@@ -37,10 +37,10 @@ public class ImServerHandler  extends ChannelInboundHandlerAdapter{
     
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object o) throws Exception {
+    	 String sessionId = ctx.channel().attr(Constants.SessionConfig.SERVER_SESSION_ID).get();
     	//发送心跳包
     	if (o instanceof IdleStateEvent && ((IdleStateEvent) o).state().equals(IdleState.WRITER_IDLE)) {
-		      ctx.channel().attr(Constants.SessionConfig.SERVER_SESSION_HEARBEAT).set(System.currentTimeMillis());
-			  String sessionId = connertor.getChannelSessionId(ctx);
+		      //ctx.channel().attr(Constants.SessionConfig.SERVER_SESSION_HEARBEAT).set(System.currentTimeMillis());
 			  if(StringUtils.isNotEmpty(sessionId)){
 				 MessageProto.Model.Builder builder = MessageProto.Model.newBuilder();
 				 builder.setCmd(Constants.CmdType.HEARTBEAT);
@@ -50,18 +50,17 @@ public class ImServerHandler  extends ChannelInboundHandlerAdapter{
  			 log.debug(IdleState.WRITER_IDLE +"... from "+sessionId+"-->"+ctx.channel().remoteAddress()+" nid:" +ctx.channel().id().asShortText());
  	    } 
 	        
-	    //如果心跳请求发出30秒内没收到响应，则关闭连接
+	    //如果心跳请求发出70秒内没收到响应，则关闭连接
 	    if ( o instanceof IdleStateEvent && ((IdleStateEvent) o).state().equals(IdleState.READER_IDLE)){
-			log.debug(IdleState.READER_IDLE +"... from "+ctx.channel().remoteAddress()+" nid:" +ctx.channel().id().asShortText());
+			log.debug(IdleState.READER_IDLE +"... from "+sessionId+" nid:" +ctx.channel().id().asShortText());
 	    	Long lastTime = (Long) ctx.channel().attr(Constants.SessionConfig.SERVER_SESSION_HEARBEAT).get();
 	    	Long currentTime = System.currentTimeMillis();
 	    	
-	    	if(lastTime != null && (currentTime - lastTime)/1000 >= Constants.ImserverConfig.PING_TIME_OUT)
+	    	if(lastTime == null || ( (currentTime - lastTime)/1000 >= Constants.ImserverConfig.PING_TIME_OUT))
 	     	{
-	    		String sessionId = connertor.getChannelSessionId(ctx);
 	     		connertor.close(ctx);
 	     	}
-	     	ctx.channel().attr(Constants.SessionConfig.SERVER_SESSION_HEARBEAT).set(null);
+	     	//ctx.channel().attr(Constants.SessionConfig.SERVER_SESSION_HEARBEAT).set(null);
 	    }
 	}
     
@@ -74,7 +73,7 @@ public class ImServerHandler  extends ChannelInboundHandlerAdapter{
                 String sessionId = connertor.getChannelSessionId(ctx);
                 // inbound
                 if (message.getMsgtype() == Constants.ProtobufType.SEND) {
-                	
+                	ctx.channel().attr(Constants.SessionConfig.SERVER_SESSION_HEARBEAT).set(System.currentTimeMillis());
                     MessageWrapper wrapper = proxy.convertToMessageWrapper(sessionId, message);
                     if (wrapper != null)
                         receiveMessages(ctx, wrapper);

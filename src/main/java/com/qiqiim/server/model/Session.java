@@ -330,8 +330,15 @@ public class Session   implements Serializable{
 
 	
 	public boolean isConnected() {
-		if(session != null)
-		{
+		//判断是否有多个session
+		if(sessions!=null&&sessions.size()>0){
+			for (String key : sessions.keySet()) {
+				Session  session = sessions.get(key);
+				if(session!=null && session.isConnected()){
+					return true;
+				}
+			}
+		}else if(session != null){
 			return session.isActive();
 		}else if(dwrsession!=null){
 			return !dwrsession.isInvalidated();
