@@ -24,7 +24,9 @@
 var msgs =null;
 var lm = null;
  
-layui.use(['jquery','mobile' ], function(){
+layui.config({
+	  version: true
+	}).use(['jquery','mobile' ], function(){
 	    var mobile = layui.mobile
          ,layim = mobile.layim
          ,$ = layui.jquery 
@@ -32,8 +34,7 @@ layui.use(['jquery','mobile' ], function(){
          ,layer = mobile.layer;
 		 var currentsession= "${sessionScope.user.id}";
 	     data = null; 
-	     
-	     
+	      
 		  //发送消息
 	      var sendMsg=function(msg,receiver,group){ 
 	    	  var message = new proto.Model(); 
