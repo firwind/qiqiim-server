@@ -183,7 +183,7 @@ layui.config({
 		  
 		  //取得离线消息
 		  showOfflineMsg(layim)
-		  
+		  layim.setFriendStatus(currentsession, 'oline');
 	   }); 
 	  //监听发送消息
 	  layim.on('sendMessage', function(data){
@@ -312,7 +312,6 @@ layui.config({
         		    ,btn: ['确定', '取消']
         		    ,yes: function(index){
         		      reconnect(websocketurl,initEventHandle); 
-                      layim.setFriendStatus(currentsession, 'oline');
         		      layer.close(index);
         		      showOfflineMsg(layim)
         		    }

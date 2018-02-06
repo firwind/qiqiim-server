@@ -187,7 +187,7 @@
 			  layim.msgbox(2); //模拟消息盒子有新消息，实际使用时，一般是动态获得 
 			  //取得离线消息
 			  showOfflineMsg(layim)
-			  
+			  layim.setFriendStatus(currentsession, 'online');
 		   });
 		  //监听发送消息
 		  layim.on('sendMessage', function(data){
@@ -312,7 +312,7 @@
 		   	       message.setToken(currentsession);
 		   	       var bytes = message.serializeBinary();  
 	               socket.send(bytes);  
-	               layim.setFriendStatus(currentsession, 'online');
+	             
 	          };
 	          //连接关闭
 	          socket.onclose = function(event) {
