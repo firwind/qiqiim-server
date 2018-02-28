@@ -69,9 +69,8 @@ public class ImConnertorImpl implements ImConnertor{
       		 * }
       		 */ 
       		if (session != null) {
-      			
-      			session.write(wrapper.getBody());
-      			return;
+      			boolean result = session.write(wrapper.getBody());
+      			return ;
       		}
         } catch (Exception e) {
         	log.error("connector pushMessage  Exception.", e);
@@ -93,8 +92,12 @@ public class ImConnertorImpl implements ImConnertor{
 	    	///取得接收人 给接收人写入消息
 	    	Session responseSession = sessionManager.getSession(wrapper.getReSessionId());
 	  		if (responseSession != null && responseSession.isConnected() ) {
-	  			responseSession.write(wrapper.getBody());
-	  			proxy.saveOnlineMessageToDB(wrapper);
+	  			boolean result = responseSession.write(wrapper.getBody());
+	  			if(result){
+	  				proxy.saveOnlineMessageToDB(wrapper);
+	  			}else{
+	  				proxy.saveOfflineMessageToDB(wrapper);
+	  			}
 	  			return;
 	  		}else{
 	  			proxy.saveOfflineMessageToDB(wrapper);
